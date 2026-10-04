@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dimensions: int = 384
     reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    ml_mode: str = "sentence_transformers"
     retrieval_candidate_limit: int = 30
     retrieval_result_limit: int = 8
     rrf_constant: int = 60
@@ -47,6 +48,8 @@ class Settings(BaseSettings):
     semantic_cache_similarity_threshold: float = 0.92
     semantic_cache_ttl_minutes: int = 60
     demo_auth_enabled: bool = True
+    demo_seed_enabled: bool = False
+    demo_data_path: str = "../data/sample/banking"
 
     @field_validator("cors_origins", mode="before")
     @classmethod
@@ -61,6 +64,12 @@ class Settings(BaseSettings):
             raise ValueError("LEDGERLENS_JWT_SECRET must be configured in production")
         if self.environment == "production" and self.demo_auth_enabled:
             raise ValueError("LEDGERLENS_DEMO_AUTH_ENABLED must be false in production")
+        if self.environment == "production" and self.ml_mode == "deterministic_demo":
+            raise ValueError("deterministic demo ML cannot be used in production")
+        if self.environment == "production" and self.llm_provider == "demo_extractive":
+            raise ValueError("demo extractive generation cannot be used in production")
+        if self.ml_mode not in {"sentence_transformers", "deterministic_demo"}:
+            raise ValueError("LEDGERLENS_ML_MODE must be sentence_transformers or deterministic_demo")
         if len(self.jwt_secret) < 32:
             raise ValueError("LEDGERLENS_JWT_SECRET must contain at least 32 characters")
         return self

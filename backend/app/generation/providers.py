@@ -17,6 +17,38 @@ class GenerationProviderError(RuntimeError):
     pass
 
 
+class DemoExtractiveProvider:
+    """Offline demo fallback; deliberately labeled as non-LLM generation."""
+
+    cache_namespace = "demo-extractive-v2"
+
+    _stopwords = {
+        "a", "an", "and", "are", "can", "for", "is", "of", "on", "the", "to", "what",
+        "when", "which", "with",
+    }
+
+    async def generate(self, request: GenerationRequest) -> LLMGeneration:
+        query_terms = {
+            token for token in re.findall(r"[a-z0-9]+", request.question.lower())
+            if token not in self._stopwords
+        }
+        ranked: list[tuple[int, int, str, str]] = []
+        for source_index, source in enumerate(request.sources):
+            sentences = re.split(r"(?<=[.!?])\s+|\n+", source.content)
+            for sentence in sentences:
+                clean = " ".join(sentence.split()).strip(" #-\t")
+                if len(clean) < 24:
+                    continue
+                terms = set(re.findall(r"[a-z0-9]+", clean.lower()))
+                ranked.append((-source_index, len(query_terms & terms), clean, source.source_id))
+        ranked.sort(reverse=True)
+        if not ranked:
+            raise GenerationProviderError("demo extractive provider received no usable evidence")
+        best = ranked[0]
+        answer = f"{best[2].rstrip('.')} [{best[3]}]."
+        return LLMGeneration(answer, (best[3],), "demo-extractive-not-llm")
+
+
 def parse_generation_content(content: str, model: str) -> LLMGeneration:
     try:
         payload = json.loads(content)
@@ -57,6 +89,7 @@ class OpenAICompatibleProvider:
         self._timeout = timeout_seconds
         self._headers = extra_headers or {}
         self._transport = transport
+        self.cache_namespace = f"openai-compatible:{self._base_url}:{self._model}"
 
     async def generate(self, request: GenerationRequest) -> LLMGeneration:
         headers = {"Content-Type": "application/json", **self._headers}
@@ -112,6 +145,7 @@ class DeterministicGroundedProvider:
     def __init__(self, answer: str, *, model: str = "deterministic-test-provider") -> None:
         self.answer = answer
         self.model = model
+        self.cache_namespace = f"deterministic:{model}"
         self.requests: list[GenerationRequest] = []
 
     async def generate(self, request: GenerationRequest) -> LLMGeneration:

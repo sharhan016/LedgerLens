@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from app.generation.domain import ContextSource, GenerationRequest
-from app.generation.providers import OpenAICompatibleProvider
+from app.generation.providers import DemoExtractiveProvider, OpenAICompatibleProvider
 
 
 @pytest.mark.asyncio
@@ -62,3 +62,26 @@ async def test_openai_compatible_provider_sends_bounded_context_and_parses_json(
     assert payload["temperature"] == 0
     assert "[S1] Minimum balance" in payload["messages"][1]["content"]
 
+
+@pytest.mark.asyncio
+async def test_demo_extractive_provider_is_explicitly_labeled_and_cited() -> None:
+    source = ContextSource(
+        "S1",
+        "chunk",
+        "document",
+        "Policy",
+        "policy.md",
+        "1",
+        "The account requires an average monthly balance of INR 25,000.",
+        "Balance",
+        None,
+    )
+
+    result = await DemoExtractiveProvider().generate(
+        GenerationRequest("What is the minimum balance?", source.content, (source,), "fact")
+    )
+
+    assert result.model == "demo-extractive-not-llm"
+    assert "INR 25,000" in result.answer
+    assert result.answer.endswith("[S1].")
+    assert result.cited_source_ids == ("S1",)

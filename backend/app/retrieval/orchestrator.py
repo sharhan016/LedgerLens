@@ -1,5 +1,3 @@
-import asyncio
-
 from app.embeddings.base import EmbeddingProvider
 from app.reranking.base import Reranker
 from app.retrieval.domain import RetrievalCandidate
@@ -47,19 +45,19 @@ class HybridRetrievalOrchestrator:
         vectors = await self._embeddings.embed([normalized_query])
         if len(vectors) != 1:
             raise ValueError("embedding provider did not return one query vector")
-        dense_results, keyword_results = await asyncio.gather(
-            self._dense.search(
-                tenant_id=principal.tenant_id,
-                role=principal.role,
-                embedding=vectors[0],
-                limit=self._candidate_limit,
-            ),
-            self._keyword.search(
-                tenant_id=principal.tenant_id,
-                role=principal.role,
-                query=normalized_query,
-                limit=self._candidate_limit,
-            ),
+        # Both adapters share the request-scoped AsyncSession. SQLAlchemy sessions do not
+        # permit concurrent operations, so issue these independently before fusion.
+        dense_results = await self._dense.search(
+            tenant_id=principal.tenant_id,
+            role=principal.role,
+            embedding=vectors[0],
+            limit=self._candidate_limit,
+        )
+        keyword_results = await self._keyword.search(
+            tenant_id=principal.tenant_id,
+            role=principal.role,
+            query=normalized_query,
+            limit=self._candidate_limit,
         )
         # PostgreSQL applies these predicates before ranking. Keep a fail-closed guard at
         # orchestration so a future adapter cannot accidentally bypass the invariant.

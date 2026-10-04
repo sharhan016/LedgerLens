@@ -1,26 +1,15 @@
-import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.config import Settings, get_settings
+from app.demo import DEMO_TENANT_ID, DEMO_TENANT_NAME, DEMO_USERS
 from app.schemas.auth import DemoLoginRequest, DemoLoginResponse, PrincipalResponse
 from app.security.dependencies import get_current_principal
-from app.security.principal import Principal, Role
+from app.security.principal import Principal
 from app.security.tokens import TokenService
 
 router = APIRouter(prefix="/api/v1/auth", tags=["authentication"])
-
-DEMO_TENANT_ID = uuid.uuid5(uuid.NAMESPACE_DNS, "northstar-union-bank.demo")
-DEMO_USERS = {
-    Role.ANALYST: (uuid.uuid5(uuid.NAMESPACE_DNS, "analyst@northstar.demo"), "Asha Rao"),
-    Role.COMPLIANCE: (
-        uuid.uuid5(uuid.NAMESPACE_DNS, "compliance@northstar.demo"),
-        "Mira Fernandes",
-    ),
-    Role.ADMIN: (uuid.uuid5(uuid.NAMESPACE_DNS, "admin@northstar.demo"), "Dev Malhotra"),
-}
-
 
 @router.post("/demo-login", response_model=DemoLoginResponse)
 async def demo_login(
@@ -34,7 +23,7 @@ async def demo_login(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Demo persona must be analyst, compliance, or admin",
         )
-    user_id, display_name = DEMO_USERS[request.persona]
+    user_id, _email, display_name = DEMO_USERS[request.persona]
     principal = Principal(user_id, DEMO_TENANT_ID, request.persona)
     return DemoLoginResponse(
         access_token=TokenService(settings).issue(principal),
@@ -44,7 +33,7 @@ async def demo_login(
             role=principal.role,
         ),
         display_name=display_name,
-        tenant_name="Northstar Union Bank · Synthetic",
+        tenant_name=DEMO_TENANT_NAME,
     )
 
 

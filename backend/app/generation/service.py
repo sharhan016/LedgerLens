@@ -86,8 +86,19 @@ class AssistantService:
             if self._cache and self._cache_embeddings and self._knowledge_versions:
                 query_embedding = (await self._cache_embeddings.embed([plan.retrieval_query]))[0]
                 knowledge_version = await self._knowledge_versions.get(principal.tenant_id)
+                provider_namespace = getattr(
+                    self._provider,
+                    "cache_namespace",
+                    type(self._provider).__qualname__,
+                )
                 context_fingerprint = hashlib.sha256(
-                    "|".join(f"{source.chunk_id}:{source.version}" for source in sources).encode()
+                    (
+                        str(provider_namespace)
+                        + "|"
+                        + "|".join(
+                            f"{source.chunk_id}:{source.version}" for source in sources
+                        )
+                    ).encode()
                 ).hexdigest()
                 cache_context = (query_embedding, knowledge_version, context_fingerprint)
                 generation = await self._cache.get(

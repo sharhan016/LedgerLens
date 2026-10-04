@@ -18,6 +18,5 @@ class SystemStatusResponse(BaseModel):
     application: str
     environment: str
     release: str
-    status: Literal["foundation_ready"]
+    status: Literal["foundation_ready", "ready"]
     capabilities: list[CapabilityStatus]
-

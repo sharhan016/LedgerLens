@@ -20,11 +20,17 @@ services:
   backend:
     build:
       context: ./backend
+      args:
+        INSTALL_ML: ${LEDGERLENS_INSTALL_ML:-false}
     env_file:
       - .env
     environment:
       LEDGERLENS_DATABASE_URL: postgresql+asyncpg://ledgerlens:ledgerlens@db:5432/ledgerlens
       LEDGERLENS_REGULATORY_FIXTURE_PATH: /data/sample/api/regulatory-bulletins.json
+      LEDGERLENS_DEMO_DATA_PATH: /data/sample/banking
+      LEDGERLENS_DEMO_SEED_ENABLED: "true"
+      LEDGERLENS_ML_MODE: ${LEDGERLENS_ML_MODE:-deterministic_demo}
+      LEDGERLENS_LLM_PROVIDER: ${LEDGERLENS_LLM_PROVIDER:-demo_extractive}
     ports:
       - "8000:8000"
     volumes:
@@ -41,10 +47,10 @@ services:
   frontend:
     build:
       context: ./frontend
-    environment:
-      VITE_API_BASE_URL: http://localhost:8000
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       backend:
         condition: service_healthy

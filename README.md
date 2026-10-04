@@ -1,79 +1,74 @@
 # LedgerLens
 
-LedgerLens is a production-style, multi-tenant banking knowledge assistant. It is
-designed to ingest synthetic policy documents and produce inspectable, grounded answers
-through hybrid retrieval, authorization-aware context construction, citations, and
-evaluation.
+LedgerLens is a production-style, multi-tenant banking knowledge assistant built around
+inspectable retrieval. It ingests a fictional policy corpus, combines pgvector similarity
+with PostgreSQL full-text search, applies reciprocal-rank fusion and reranking, enforces
+tenant and role filters in the query, and returns cited answers with the underlying
+passages, scores, route, confidence, and latency record.
 
-The repository is intentionally standalone. The adjacent Vertex Harness coordinates
-development and records verification evidence, but it is not copied into the application
-and is never a runtime dependency.
+The adjacent Vertex Harness coordinates development and stores local verification
+receipts. LedgerLens remains standalone: Vertex is not copied into this repository and is
+not a runtime dependency. `.vertex/` is intentionally ignored by Git.
 
-## Current state
+## Run the synthetic demo
 
-The active increment is the runnable project foundation:
-
-- FastAPI exposes liveness, readiness, and system-status endpoints.
-- React and Vite provide an honest system-readiness browser shell.
-- Docker Compose declares the web, API, and PostgreSQL/pgvector services.
-- Later capabilities are tracked as dependency-gated Vertex tasks in
-  `.vertex/project.json`; the browser does not pretend those capabilities exist yet.
-
-See [the delivery plan](docs/architecture/delivery-plan.md) and
-[the system architecture](docs/architecture/system-overview.md).
-
-## Prerequisites
-
-- Python 3.11+
-- Node.js 22+
-- npm 10+
-- Docker with the Compose v2 plugin (for the complete local stack)
-- `uv` for the recommended backend workflow
-
-The default `make install` includes the `ml` extra used by the real local Sentence
-Transformers embedding and cross-encoder reranking adapters. Model weights are downloaded
-by those libraries on first use and cached outside the repository.
-
-## Local setup
+Prerequisites are Docker with Compose v2. No real customer or institution data is used.
 
 ```console
 cp .env.example .env
-make install
-make dev-api
-```
-
-In another terminal:
-
-```console
-make dev-web
-```
-
-Open `http://localhost:5173`. The API is served at `http://localhost:8000`.
-
-Generation defaults to a local OpenAI-compatible server at the URL in `.env.example`.
-Change `LEDGERLENS_LLM_PROVIDER`, `LEDGERLENS_LLM_BASE_URL`,
-`LEDGERLENS_LLM_API_KEY`, and `LEDGERLENS_LLM_MODEL` to use another compatible API or
-OpenRouter. The application never falls back to fabricated answers when a provider or
-authorized source is unavailable.
-
-To run the containerized stack after installing Docker Compose v2:
-
-```console
 docker compose up --build
 ```
 
-## Verification
+Open `http://localhost:5173`, then choose Asha (analyst), Mira (compliance), or Dev
+(administrator). The first container start applies all migrations and idempotently loads
+the eight synthetic policies, three demo identities, and a small product-metrics ledger.
+The API is available at `http://localhost:8000`; readiness is database-backed at
+`/health/ready`.
+
+The Compose demo deliberately defaults to two clearly identified offline adapters:
+
+- `deterministic_demo` embeddings/reranking keep a first run small and repeatable.
+- `demo-extractive-not-llm` produces cited extractive answers without calling a model.
+
+They are demo-only and rejected when `LEDGERLENS_ENV=production`. To exercise the real
+local ML path, set `LEDGERLENS_INSTALL_ML=true` and
+`LEDGERLENS_ML_MODE=sentence_transformers`, then rebuild. To use an actual generator,
+set `LEDGERLENS_LLM_PROVIDER` to `local_openai`, `openai_compatible`, or `openrouter` and
+configure the URL, model, and key in `.env`. Sentence Transformers and the cross-encoder
+remain the default outside the container demo.
+
+Stop the stack with `docker compose down`. Add `--volumes` only when you intentionally want
+to erase the local demo database.
+
+## Develop and verify
+
+Python 3.11+, Node.js 22+, npm 10+, and `uv` are required for host development.
 
 ```console
-make verify-foundation
+make install
+make test-backend
+make test-web
+make build-web
+make verify
 ```
 
-The same command is registered as the executable Vertex check for task `T-01`.
-Vertex records the command, source fingerprint, output, and result in its repository
-ledger rather than trusting a manual completion claim.
+Run the API and web workspace separately with `make dev-api` and `make dev-web`. The
+integrated verification runs linting, backend and frontend tests, migration compilation,
+the retrieval evaluation dataset, a production web build, container contract checks, and
+the Playwright browser journey.
 
-## Synthetic data only
+## Architecture and safety
 
-LedgerLens must never contain real customer financial data. All demo policies, accounts,
-transactions, and identities introduced in later phases will be fictional and visibly
-labelled as synthetic.
+- FastAPI, Pydantic, SQLAlchemy async, Alembic, PostgreSQL, and pgvector form the service.
+- React, TypeScript, and Vite provide the responsive evidence workspace.
+- JWT principals carry tenant and role; database retrieval applies both filters before
+  ranking and orchestration validates them again fail-closed.
+- OpenAI-compatible, OpenRouter, and local OpenAI-style generation share one provider
+  boundary. Answers without authorized evidence do not call a provider.
+- Audit records retain hashes, routes, counts, and grounding outcomes—not raw questions.
+- Semantic cache keys include tenant, role, knowledge version, evidence fingerprint, and
+  expiry.
+
+See [system architecture](docs/architecture/system-overview.md),
+[delivery plan](docs/architecture/delivery-plan.md), and the
+[demo runbook](docs/demo/runbook.md).

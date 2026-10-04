@@ -1,12 +1,14 @@
 from functools import lru_cache
 
 from app.core.config import get_settings
-from app.generation.providers import LLMProvider, OpenAICompatibleProvider
+from app.generation.providers import DemoExtractiveProvider, LLMProvider, OpenAICompatibleProvider
 
 
 @lru_cache
 def get_llm_provider() -> LLMProvider:
     settings = get_settings()
+    if settings.llm_provider == "demo_extractive":
+        return DemoExtractiveProvider()
     headers: dict[str, str] = {}
     if settings.llm_provider == "openrouter":
         headers = {
@@ -22,4 +24,3 @@ def get_llm_provider() -> LLMProvider:
         timeout_seconds=settings.llm_timeout_seconds,
         extra_headers=headers,
     )
-
