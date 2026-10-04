@@ -1,0 +1,51 @@
+name: ledgerlens
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ledgerlens}
+      POSTGRES_USER: ${POSTGRES_USER:-ledgerlens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ledgerlens}
+    volumes:
+      - ledgerlens_postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env
+    environment:
+      LEDGERLENS_DATABASE_URL: postgresql+asyncpg://ledgerlens:ledgerlens@db:5432/ledgerlens
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  ledgerlens_postgres:
+

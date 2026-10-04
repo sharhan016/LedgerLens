@@ -1,0 +1,453 @@
+{
+  "attempts": [
+    {
+      "check_id": "verify-foundation",
+      "command": [
+        "bash",
+        "scripts/verify/01-foundation.sh"
+      ],
+      "finished_at": "2026-10-04T07:52:00.931+00:00",
+      "id": "AT-2bfa28227c154e4ab0efb5c2d4af5e2e",
+      "note": null,
+      "pid": 75788,
+      "receipt_id": "EV-d2ade95cea9f43998a4e4c417fa77414",
+      "started_at": "2026-10-04T07:51:52.288+00:00",
+      "status": "finished",
+      "task_id": "T-01"
+    },
+    {
+      "check_id": "verify-security",
+      "command": [
+        "bash",
+        "scripts/verify/02-security.sh"
+      ],
+      "finished_at": "2026-10-04T07:59:27.979+00:00",
+      "id": "AT-dc78923f30ae48608e4dadb0a53779d2",
+      "note": null,
+      "pid": 77402,
+      "receipt_id": "EV-b0e907d45913447fa465291288a3a35b",
+      "started_at": "2026-10-04T07:59:26.291+00:00",
+      "status": "finished",
+      "task_id": "T-02"
+    }
+  ],
+  "checkpoints": [
+    {
+      "created_at": "2026-10-04T07:52:07.911+00:00",
+      "id": "CP-9428ec0277784f76b345d65248334dde",
+      "note": "Foundation verified: architecture and phased plan documented; FastAPI status endpoints tested; React/Vite shell built and browser-smoked at desktop/mobile; Compose declares pgvector, API, and web. Proceed to tenant-aware persistence and RBAC.",
+      "revision": 23,
+      "task_id": "T-01"
+    },
+    {
+      "created_at": "2026-10-04T07:59:38.182+00:00",
+      "id": "CP-d6fbbdd812fe4e1c83807f4da3315bc8",
+      "note": "Tenant security verified: pgvector migration SQL, signed bearer identity, RBAC permissions, tenant-and-role-scoped document repositories, authenticated API routes, and cross-tenant denial tests pass.",
+      "revision": 29,
+      "task_id": "T-02"
+    }
+  ],
+  "evidence": [
+    {
+      "check_id": "verify-foundation",
+      "command": [
+        "bash",
+        "scripts/verify/01-foundation.sh"
+      ],
+      "criterion_ids": [
+        "AC-01.1",
+        "AC-01.2",
+        "AC-01.3"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-04T07:52:00.931+00:00",
+      "id": "EV-d2ade95cea9f43998a4e4c417fa77414",
+      "outcome": "passed",
+      "source_after": "58859c9249bc8713d45bb0f68207cda4c3a27dcb22c4bde240fc79fa8c845f41",
+      "source_before": "58859c9249bc8713d45bb0f68207cda4c3a27dcb22c4bde240fc79fa8c845f41",
+      "started_at": "2026-10-04T07:51:52.288+00:00",
+      "stderr": "",
+      "stdout": "foundation structure and architecture assertions passed\nAll checks passed!\n============================= test session starts ==============================\nplatform darwin -- Python 3.11.14, pytest-8.4.2, pluggy-1.6.0\nrootdir: /Users/sharhan/Developer/LedgerLens/backend\nconfigfile: pyproject.toml\ntestpaths: tests\nplugins: asyncio-0.26.0, anyio-4.15.1\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 2 items\n\ntests/test_system_api.py ..                                              [100%]\n\n=============================== warnings summary ===============================\n.venv/lib/python3.11/site-packages/fastapi/testclient.py:1\n  /Users/sharhan/Developer/LedgerLens/backend/.venv/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n========================= 2 passed, 1 warning in 0.27s =========================\n\n> ledgerlens-web@0.1.0 build\n> tsc -b && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n\u2713 32 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.55 kB \u2502 gzip:  0.34 kB\ndist/assets/index-BvBUj0p0.css    6.12 kB \u2502 gzip:  2.21 kB\ndist/assets/index-CtjLzkUm.js   226.49 kB \u2502 gzip: 70.76 kB\n\u2713 built in 912ms\nbrowser foundation smoke passed; screenshot: /tmp/ledgerlens-foundation.png\nStarting server 1/2: cd backend && UV_CACHE_DIR=../.cache/uv uv run --offline uvicorn app.main:app --host 127.0.0.1 --port 8000\nWaiting for server on port 8000...\nServer ready on port 8000\nStarting server 2/2: npm --prefix frontend run dev -- --host 127.0.0.1\nWaiting for server on port 5173...\nServer ready on port 5173\n\nAll 2 server(s) ready\nRunning: python3 scripts/playwright/foundation_smoke.py\n\n\nStopping 2 server(s)...\nServer 1 stopped\nServer 2 stopped\nAll servers stopped\n",
+      "task_id": "T-01"
+    },
+    {
+      "check_id": "verify-security",
+      "command": [
+        "bash",
+        "scripts/verify/02-security.sh"
+      ],
+      "criterion_ids": [
+        "AC-02.1",
+        "AC-02.2",
+        "AC-02.3"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-10-04T07:59:27.979+00:00",
+      "id": "EV-b0e907d45913447fa465291288a3a35b",
+      "outcome": "passed",
+      "source_after": "a06db50f910834df5aab2b914a7a49d5e20560b21b7479f8f7edae19b629866c",
+      "source_before": "a06db50f910834df5aab2b914a7a49d5e20560b21b7479f8f7edae19b629866c",
+      "started_at": "2026-10-04T07:59:26.291+00:00",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Generating static SQL\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001, Create tenant-aware security and document foundations.\n",
+      "stdout": "All checks passed!\n============================= test session starts ==============================\nplatform darwin -- Python 3.11.14, pytest-8.4.2, pluggy-1.6.0\nrootdir: /Users/sharhan/Developer/LedgerLens/backend\nconfigfile: pyproject.toml\nplugins: asyncio-0.26.0, anyio-4.15.1\nasyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 7 items\n\ntests/test_security.py ..                                                [ 28%]\ntests/test_tenant_documents.py ..                                        [ 57%]\ntests/test_authorized_api.py ..                                          [ 85%]\ntests/test_migration_contract.py .                                       [100%]\n\n=============================== warnings summary ===============================\n.venv/lib/python3.11/site-packages/fastapi/testclient.py:1\n  /Users/sharhan/Developer/LedgerLens/backend/.venv/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n========================= 7 passed, 1 warning in 0.53s =========================\n",
+      "task_id": "T-02"
+    }
+  ],
+  "project": {
+    "objective": "Deliver a production-style, browser-demonstrable multi-tenant banking RAG knowledge assistant with inspectable grounded answers, reproducible local infrastructure, and executable evidence for each phase",
+    "tasks": [
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Architecture, phased delivery plan, setup, and explicit non-goals are documented",
+            "id": "AC-01.1"
+          },
+          {
+            "description": "FastAPI health/configuration and React application shell build successfully",
+            "id": "AC-01.2"
+          },
+          {
+            "description": "Reproducible container configuration declares PostgreSQL with pgvector, backend, and frontend services",
+            "id": "AC-01.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/01-foundation.sh"
+            ],
+            "criterion_ids": [
+              "AC-01.1",
+              "AC-01.2",
+              "AC-01.3"
+            ],
+            "id": "verify-foundation",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [],
+        "id": "T-01",
+        "outcome": "A contributor can understand, configure, build, and start the standalone LedgerLens application foundation",
+        "status": "completed",
+        "title": "Establish runnable project foundation"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Database migrations create tenant, user, role, document, chunk, and audit foundations with pgvector enabled",
+            "id": "AC-02.1"
+          },
+          {
+            "description": "Authentication and RBAC enforce tenant boundaries in API and repository layers",
+            "id": "AC-02.2"
+          },
+          {
+            "description": "Security behavior is proven by focused tests including cross-tenant denial",
+            "id": "AC-02.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/02-security.sh"
+            ],
+            "criterion_ids": [
+              "AC-02.1",
+              "AC-02.2",
+              "AC-02.3"
+            ],
+            "id": "verify-security",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-01"
+        ],
+        "id": "T-02",
+        "outcome": "Authenticated users access tenant-isolated persisted banking knowledge according to roles",
+        "status": "completed",
+        "title": "Add tenant-aware security and persistence"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Sample synthetic banking corpus contains no real customer data and covers core demo policies",
+            "id": "AC-03.1"
+          },
+          {
+            "description": "Parsing, cleaning, chunking, metadata enrichment, and ingestion status work end-to-end",
+            "id": "AC-03.2"
+          },
+          {
+            "description": "Chunks retain source, page or section, version, tenant, and authorization metadata",
+            "id": "AC-03.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/03-ingestion.sh"
+            ],
+            "criterion_ids": [
+              "AC-03.1",
+              "AC-03.2",
+              "AC-03.3"
+            ],
+            "id": "verify-ingestion",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-02"
+        ],
+        "id": "T-03",
+        "outcome": "Authorized users can ingest realistic synthetic banking documents into traceable clean chunks",
+        "status": "planned",
+        "title": "Implement document ingestion"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Embedding and reranker interfaces support production local models and deterministic test doubles",
+            "id": "AC-04.1"
+          },
+          {
+            "description": "PostgreSQL pgvector and full-text retrieval results are fused with reciprocal rank fusion",
+            "id": "AC-04.2"
+          },
+          {
+            "description": "Authorization filters are applied before results reach context construction and retrieval quality tests pass",
+            "id": "AC-04.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/04-retrieval.sh"
+            ],
+            "criterion_ids": [
+              "AC-04.1",
+              "AC-04.2",
+              "AC-04.3"
+            ],
+            "id": "verify-retrieval",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-03"
+        ],
+        "id": "T-04",
+        "outcome": "Tenant-authorized questions retrieve relevant banking passages through dense and keyword search, RRF, and reranking",
+        "status": "planned",
+        "title": "Implement hybrid retrieval and reranking"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Query understanding, rewriting, routing, context construction, and provider selection are modular",
+            "id": "AC-05.1"
+          },
+          {
+            "description": "Answers expose citations, source locations, retrieved passages, latency, and confidence or grounding signals",
+            "id": "AC-05.2"
+          },
+          {
+            "description": "Citation and grounding validators reject or clearly label unsupported claims",
+            "id": "AC-05.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/05-grounding.sh"
+            ],
+            "criterion_ids": [
+              "AC-05.1",
+              "AC-05.2",
+              "AC-05.3"
+            ],
+            "id": "verify-grounding",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-04"
+        ],
+        "id": "T-05",
+        "outcome": "The API produces inspectable grounded answers with citations through a configurable LLM provider abstraction",
+        "status": "planned",
+        "title": "Deliver grounded assistant answers"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Allowlisted read-only SQL retrieval is tenant-scoped and protected from arbitrary query execution",
+            "id": "AC-06.1"
+          },
+          {
+            "description": "External or internal API retrieval uses typed adapters, timeouts, and explicit mock-demo integrations",
+            "id": "AC-06.2"
+          },
+          {
+            "description": "Agentic retrieval decisions and validation are observable and covered by routing tests",
+            "id": "AC-06.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/06-routed-sources.sh"
+            ],
+            "criterion_ids": [
+              "AC-06.1",
+              "AC-06.2",
+              "AC-06.3"
+            ],
+            "id": "verify-routed-sources",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-05"
+        ],
+        "id": "T-06",
+        "outcome": "The assistant can safely route suitable questions to governed SQL and API data sources and validate the combined retrieval",
+        "status": "planned",
+        "title": "Add routed SQL and API retrieval"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Conversation history and semantic cache are tenant-aware with safe invalidation",
+            "id": "AC-07.1"
+          },
+          {
+            "description": "Audit logs and request metrics capture retrieval and generation latency without sensitive content leakage",
+            "id": "AC-07.2"
+          },
+          {
+            "description": "Versioned evaluation datasets and executable retrieval and answer benchmarks produce reports",
+            "id": "AC-07.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/07-operations.sh"
+            ],
+            "criterion_ids": [
+              "AC-07.1",
+              "AC-07.2",
+              "AC-07.3"
+            ],
+            "id": "verify-operations",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-05"
+        ],
+        "id": "T-07",
+        "outcome": "Assistant usage is traceable, measurable, evaluable, and efficient across conversations",
+        "status": "planned",
+        "title": "Add conversation, caching, audit, and evaluation"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "The responsive React UI provides authenticated assistant and conversation workflows",
+            "id": "AC-08.1"
+          },
+          {
+            "description": "Users can inspect citations, source passages, routing, scores, grounding, and latency",
+            "id": "AC-08.2"
+          },
+          {
+            "description": "Admin views expose document ingestion, audit-safe operational status, and evaluation results with accessible interactions",
+            "id": "AC-08.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/08-browser.sh"
+            ],
+            "criterion_ids": [
+              "AC-08.1",
+              "AC-08.2",
+              "AC-08.3"
+            ],
+            "id": "verify-browser",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-06",
+          "T-07"
+        ],
+        "id": "T-08",
+        "outcome": "Authorized users can ask questions, inspect answer provenance, manage ingestion, and review evaluation and system signals in a responsive browser UI",
+        "status": "planned",
+        "title": "Build the browser demonstration experience"
+      },
+      {
+        "acceptance_criteria": [
+          {
+            "description": "Docker-based end-to-end smoke tests cover authentication, ingestion, retrieval, grounded answer, and browser delivery",
+            "id": "AC-09.1"
+          },
+          {
+            "description": "Failure handling, health checks, configuration validation, and security-sensitive paths are tested",
+            "id": "AC-09.2"
+          },
+          {
+            "description": "Demo runbook, architecture record, operations guide, and known limitations match actual behavior",
+            "id": "AC-09.3"
+          }
+        ],
+        "blocker": null,
+        "checks": [
+          {
+            "command": [
+              "bash",
+              "scripts/verify/09-integrated-demo.sh"
+            ],
+            "criterion_ids": [
+              "AC-09.1",
+              "AC-09.2",
+              "AC-09.3"
+            ],
+            "id": "verify-integrated-demo",
+            "timeout_seconds": 300
+          }
+        ],
+        "dependencies": [
+          "T-08"
+        ],
+        "id": "T-09",
+        "outcome": "LedgerLens runs reproducibly as a polished standalone demonstration with documented limitations",
+        "status": "planned",
+        "title": "Harden the integrated demo"
+      }
+    ]
+  },
+  "revision": 30,
+  "schema_version": 3
+}
