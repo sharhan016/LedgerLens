@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.assistant import router as assistant_router
 from app.api.auth import router as auth_router
+from app.api.conversations import router as conversations_router
 from app.api.documents import router as documents_router
+from app.api.evaluation import router as evaluation_router
 from app.api.ingestion import router as ingestion_router
 from app.api.retrieval import router as retrieval_router
 from app.api.system import router as system_router
@@ -33,6 +35,8 @@ def create_app() -> FastAPI:
     application.include_router(ingestion_router)
     application.include_router(retrieval_router)
     application.include_router(assistant_router)
+    application.include_router(conversations_router)
+    application.include_router(evaluation_router)
     application.include_router(observability_router)
     return application
 

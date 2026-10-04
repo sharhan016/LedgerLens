@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     regulatory_api_timeout_seconds: float = 5.0
     semantic_cache_similarity_threshold: float = 0.92
     semantic_cache_ttl_minutes: int = 60
+    demo_auth_enabled: bool = True
 
     @field_validator("cors_origins", mode="before")
     @classmethod
@@ -58,6 +59,8 @@ class Settings(BaseSettings):
     def require_production_secret(self) -> "Settings":
         if self.environment == "production" and self.jwt_secret.startswith("development-"):
             raise ValueError("LEDGERLENS_JWT_SECRET must be configured in production")
+        if self.environment == "production" and self.demo_auth_enabled:
+            raise ValueError("LEDGERLENS_DEMO_AUTH_ENABLED must be false in production")
         if len(self.jwt_secret) < 32:
             raise ValueError("LEDGERLENS_JWT_SECRET must contain at least 32 characters")
         return self
