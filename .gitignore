@@ -13,5 +13,4 @@ frontend/*.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
 backend/.venv/
-.vertex/index.json
-.vertex/*.lock
+.vertex/
