@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
+    Numeric,
     String,
     Text,
     UniqueConstraint,
@@ -110,4 +111,23 @@ class AuditEvent(Base):
     resource_id: Mapped[str | None] = mapped_column(String(120))
     request_id: Mapped[str | None] = mapped_column(String(100))
     details: Mapped[dict[str, object]] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class ProductMetric(Base):
+    __tablename__ = "product_metrics"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "metric_key", "effective_date", name="uq_product_metric"),
+        Index("ix_product_metrics_tenant_key", "tenant_id", "metric_key"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_pk()
+    tenant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("tenants.id", ondelete="CASCADE"))
+    metric_key: Mapped[str] = mapped_column(String(120))
+    label: Mapped[str] = mapped_column(String(240))
+    value: Mapped[float] = mapped_column(Numeric(18, 4))
+    unit: Mapped[str] = mapped_column(String(40))
+    effective_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    allowed_roles: Mapped[list[str]] = mapped_column(ARRAY(String(32)), default=list)
+    source: Mapped[str] = mapped_column(String(300))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

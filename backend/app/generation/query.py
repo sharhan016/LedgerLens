@@ -16,6 +16,8 @@ class QueryPlan:
     intent: QueryIntent
     route: str
     transformations: tuple[str, ...]
+    routing_reason: str
+    selected_sources: tuple[str, ...]
 
 
 class RuleBasedQueryPlanner:
@@ -41,10 +43,33 @@ class RuleBasedQueryPlanner:
                 rewritten = re.sub(pattern, replacement, rewritten, flags=re.IGNORECASE)
                 label = pattern.replace("\\b", "")
                 transformations.append(f"expanded:{label}")
+        wants_api = any(token in lowered for token in ("regulatory", "regulator", "bulletin"))
+        wants_sql = any(
+            token in lowered
+            for token in ("interest rate", "annual fee", "portfolio metric", "configured products")
+        )
+        if wants_api and wants_sql:
+            route = "hybrid_sql_api"
+            sources = ("documents", "structured_metrics", "regulatory_api")
+            reason = "Question requests both governed metrics and regulatory guidance."
+        elif wants_api:
+            route = "hybrid_api"
+            sources = ("documents", "regulatory_api")
+            reason = "Question refers to regulatory guidance or bulletins."
+        elif wants_sql:
+            route = "hybrid_sql"
+            sources = ("documents", "structured_metrics")
+            reason = "Question matches an allowlisted structured product metric."
+        else:
+            route = "hybrid_knowledge"
+            sources = ("documents",)
+            reason = "Question is answered from authorized document knowledge."
         return QueryPlan(
             original_query=normalized,
             retrieval_query=rewritten,
             intent=intent,
-            route="hybrid_knowledge",
+            route=route,
             transformations=tuple(transformations),
+            routing_reason=reason,
+            selected_sources=sources,
         )

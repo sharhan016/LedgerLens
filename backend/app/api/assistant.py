@@ -60,6 +60,8 @@ async def ask(
                 keyword_score=passage.keyword_score,
                 rrf_score=passage.rrf_score,
                 rerank_score=passage.rerank_score,
+                retrieval_channel=passage.retrieval_channel,
+                validation_status=passage.validation_status,
             )
             for passage in result.passages
         ],
@@ -77,7 +79,8 @@ async def ask(
             intent=result.plan.intent.value,
             route=result.plan.route,
             transformations=list(result.plan.transformations),
+            routing_reason=result.plan.routing_reason,
+            selected_sources=list(result.plan.selected_sources),
         ),
         latency_ms=result.latency_ms,
     )
-

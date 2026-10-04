@@ -20,6 +20,8 @@ class RetrievalCandidate:
     keyword_rank: int | None = None
     rrf_score: float = 0.0
     rerank_score: float | None = None
+    retrieval_channel: str = "hybrid"
+    validation_status: str = "authorized"
 
     def with_rank(self, *, channel: str, rank: int, score: float) -> "RetrievalCandidate":
         if channel == "dense":
@@ -27,4 +29,3 @@ class RetrievalCandidate:
         if channel == "keyword":
             return replace(self, keyword_rank=rank, keyword_score=score)
         raise ValueError(f"unknown retrieval channel: {channel}")
-

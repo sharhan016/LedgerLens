@@ -30,6 +30,8 @@ class PassageEvidenceResponse(BaseModel):
     keyword_score: float | None
     rrf_score: float
     rerank_score: float | None
+    retrieval_channel: str
+    validation_status: str
 
 
 class GroundingResponse(BaseModel):
@@ -47,6 +49,8 @@ class QueryTraceResponse(BaseModel):
     intent: str
     route: str
     transformations: list[str]
+    routing_reason: str
+    selected_sources: list[str]
 
 
 class AssistantResponse(BaseModel):
@@ -57,4 +61,3 @@ class AssistantResponse(BaseModel):
     grounding: GroundingResponse
     query_trace: QueryTraceResponse
     latency_ms: dict[str, float]
-

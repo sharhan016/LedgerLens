@@ -7,7 +7,7 @@ from app.generation.grounding import GroundingValidator
 from app.generation.providers import LLMProvider
 from app.generation.query import QueryPlan, RuleBasedQueryPlanner
 from app.retrieval.domain import RetrievalCandidate
-from app.retrieval.orchestrator import HybridRetrievalOrchestrator
+from app.retrieval.ports import RetrievalOrchestrator
 from app.security.principal import Principal
 
 
@@ -26,7 +26,7 @@ class AssistantService:
     def __init__(
         self,
         *,
-        retrieval: HybridRetrievalOrchestrator,
+        retrieval: RetrievalOrchestrator,
         provider: LLMProvider,
         planner: RuleBasedQueryPlanner | None = None,
         context_builder: ContextBuilder | None = None,
@@ -42,7 +42,11 @@ class AssistantService:
         started = time.perf_counter()
         plan = self._planner.plan(question)
         planned = time.perf_counter()
-        passages = await self._retrieval.search(principal, plan.retrieval_query)
+        passages = await self._retrieval.search(
+            principal,
+            plan.retrieval_query,
+            route=plan.route,
+        )
         retrieved = time.perf_counter()
         context, sources = self._context_builder.build(passages)
         if not sources:

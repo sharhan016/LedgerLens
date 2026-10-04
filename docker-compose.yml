@@ -24,8 +24,11 @@ services:
       - .env
     environment:
       LEDGERLENS_DATABASE_URL: postgresql+asyncpg://ledgerlens:ledgerlens@db:5432/ledgerlens
+      LEDGERLENS_REGULATORY_FIXTURE_PATH: /data/sample/api/regulatory-bulletins.json
     ports:
       - "8000:8000"
+    volumes:
+      - ./data:/data:ro
     depends_on:
       db:
         condition: service_healthy
@@ -48,4 +51,3 @@ services:
 
 volumes:
   ledgerlens_postgres:
-

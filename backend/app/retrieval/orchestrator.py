@@ -32,7 +32,13 @@ class HybridRetrievalOrchestrator:
         self._result_limit = result_limit
         self._rrf_constant = rrf_constant
 
-    async def search(self, principal: Principal, query: str) -> list[RetrievalCandidate]:
+    async def search(
+        self,
+        principal: Principal,
+        query: str,
+        *,
+        route: str = "hybrid_knowledge",
+    ) -> list[RetrievalCandidate]:
         if not principal.can(Permission.DOCUMENTS_READ):
             raise RetrievalPermissionError("documents:read permission required")
         normalized_query = " ".join(query.split())
@@ -77,4 +83,3 @@ class HybridRetrievalOrchestrator:
             fused[: self._candidate_limit],
         )
         return reranked[: self._result_limit]
-

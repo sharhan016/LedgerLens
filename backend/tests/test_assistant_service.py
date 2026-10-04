@@ -13,7 +13,7 @@ class StubRetrieval:
         self.passages = passages
         self.queries: list[str] = []
 
-    async def search(self, principal, query):  # type: ignore[no-untyped-def]
+    async def search(self, principal, query, *, route="hybrid_knowledge"):  # type: ignore[no-untyped-def]
         self.queries.append(query)
         return self.passages
 
@@ -73,4 +73,3 @@ async def test_assistant_does_not_call_llm_without_authorized_evidence() -> None
     assert "could not find authorized source material" in result.answer
     assert result.grounding.grounded is False
     assert provider.requests == []
-

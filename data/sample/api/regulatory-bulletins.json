@@ -1,0 +1,28 @@
+{
+  "integration_mode": "mock-demo",
+  "synthetic": true,
+  "notice": "Fictional regulatory bulletin responses for LedgerLens demonstrations only.",
+  "bulletins": [
+    {
+      "id": "SRB-2026-014",
+      "title": "Synthetic guidance on periodic KYC remediation",
+      "published_at": "2026-08-12",
+      "summary": "Fictional guidance asks institutions to provide a clear remediation window before restricting an existing low-risk account, while preserving controls required for substantiated financial-crime risk.",
+      "source_url": "https://regulator.invalid/bulletins/SRB-2026-014"
+    },
+    {
+      "id": "SRB-2026-009",
+      "title": "Synthetic bulletin on digital fraud response evidence",
+      "published_at": "2026-06-18",
+      "summary": "Fictional guidance emphasizes out-of-band customer verification, session revocation, and a complete audit trail when responding to suspected account takeover.",
+      "source_url": "https://regulator.invalid/bulletins/SRB-2026-009"
+    },
+    {
+      "id": "SRB-2026-003",
+      "title": "Synthetic consumer disclosure guidance for fees",
+      "published_at": "2026-02-05",
+      "summary": "Fictional guidance requires fees and key conditions to be disclosed before product acceptance and prohibits collecting a lending fee before the sanction summary is accepted.",
+      "source_url": "https://regulator.invalid/bulletins/SRB-2026-003"
+    }
+  ]
+}

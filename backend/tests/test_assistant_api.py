@@ -16,7 +16,7 @@ class StubRetrieval:
     def __init__(self, candidate: RetrievalCandidate) -> None:
         self.candidate = candidate
 
-    async def search(self, principal, query):  # type: ignore[no-untyped-def]
+    async def search(self, principal, query, *, route="hybrid_knowledge"):  # type: ignore[no-untyped-def]
         assert principal.tenant_id == self.candidate.tenant_id
         return [self.candidate]
 
@@ -73,4 +73,3 @@ def test_assistant_api_exposes_citations_passages_grounding_trace_and_latency() 
         "validation",
         "total",
     }
-

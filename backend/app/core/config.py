@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     llm_model: str = "qwen2.5:7b-instruct"
     llm_timeout_seconds: float = 45.0
     context_max_characters: int = 14_000
+    regulatory_api_mode: str = "fixture"
+    regulatory_api_url: str | None = None
+    regulatory_fixture_path: str = "../data/sample/api/regulatory-bulletins.json"
+    regulatory_api_timeout_seconds: float = 5.0
 
     @field_validator("cors_origins", mode="before")
     @classmethod
