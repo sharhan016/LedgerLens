@@ -1,0 +1,8 @@
+{"id":"BAL-001","question":"What is the minimum balance requirement for the Premium Savings Account?","expected_source":"premium-savings-policy.md","expected_terms":["average monthly balance","INR 25,000"]}
+{"id":"KYC-001","question":"What documents are required for KYC verification?","expected_source":"kyc-aml-manual.md","expected_terms":["photo identity","address document","tax identifier"]}
+{"id":"LOAN-001","question":"Can a self-employed customer apply for a personal loan?","expected_source":"personal-loan-policy.md","expected_terms":["two years","income-tax returns","bank statements"]}
+{"id":"LOAN-002","question":"What is the processing fee for a personal loan?","expected_source":"personal-loan-policy.md","expected_terms":["1.5 percent","INR 1,500","INR 15,000"]}
+{"id":"AML-001","question":"What is the policy for suspicious transactions?","expected_source":"transactions-and-fraud-policy.md","expected_terms":["expected profile","Compliance","must not tell"]}
+{"id":"CARD-001","question":"Which customers are eligible for the Gold Credit Card?","expected_source":"gold-credit-card-policy.md","expected_terms":["INR 75,000","INR 900,000","KYC"]}
+{"id":"KYC-002","question":"According to the latest policy, what happens when a customer fails KYC verification?","expected_source":"kyc-aml-manual.md","expected_terms":["outgoing transfers","30 calendar days","Compliance"]}
+{"id":"CARD-002","question":"Compare the eligibility requirements for the Gold and Classic credit cards.","expected_source":"gold-credit-card-policy.md","expected_terms":["INR 75,000","INR 35,000","Classic Card"]}

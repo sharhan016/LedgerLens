@@ -30,7 +30,11 @@ async def ask(
     principal: DocumentReader,
     assistant: AssistantDependency,
 ) -> AssistantResponse:
-    result = await assistant.answer(principal, request.question)
+    result = await assistant.answer(
+        principal,
+        request.question,
+        conversation_id=request.conversation_id,
+    )
     return AssistantResponse(
         answer=result.answer,
         model=result.model,
@@ -83,4 +87,6 @@ async def ask(
             selected_sources=list(result.plan.selected_sources),
         ),
         latency_ms=result.latency_ms,
+        conversation_id=result.conversation_id,
+        cache_hit=result.cache_hit,
     )

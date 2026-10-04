@@ -71,5 +71,8 @@ def test_assistant_api_exposes_citations_passages_grounding_trace_and_latency() 
         "retrieval",
         "generation",
         "validation",
+        "operations",
         "total",
     }
+    assert body["conversation_id"] is None
+    assert body["cache_hit"] is False

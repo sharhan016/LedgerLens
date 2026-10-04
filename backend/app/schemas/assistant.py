@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=3, max_length=2000)
+    conversation_id: uuid.UUID | None = None
 
 
 class CitationResponse(BaseModel):
@@ -61,3 +62,5 @@ class AssistantResponse(BaseModel):
     grounding: GroundingResponse
     query_trace: QueryTraceResponse
     latency_ms: dict[str, float]
+    conversation_id: uuid.UUID | None
+    cache_hit: bool

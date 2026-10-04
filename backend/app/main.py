@@ -8,6 +8,8 @@ from app.api.ingestion import router as ingestion_router
 from app.api.retrieval import router as retrieval_router
 from app.api.system import router as system_router
 from app.core.config import get_settings
+from app.observability.http import RequestTelemetryMiddleware
+from app.observability.http import router as observability_router
 
 
 def create_app() -> FastAPI:
@@ -24,12 +26,14 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
     )
+    application.add_middleware(RequestTelemetryMiddleware)
     application.include_router(system_router)
     application.include_router(auth_router)
     application.include_router(documents_router)
     application.include_router(ingestion_router)
     application.include_router(retrieval_router)
     application.include_router(assistant_router)
+    application.include_router(observability_router)
     return application
 
 

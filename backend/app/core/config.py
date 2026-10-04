@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     regulatory_api_url: str | None = None
     regulatory_fixture_path: str = "../data/sample/api/regulatory-bulletins.json"
     regulatory_api_timeout_seconds: float = 5.0
+    semantic_cache_similarity_threshold: float = 0.92
+    semantic_cache_ttl_minutes: int = 60
 
     @field_validator("cors_origins", mode="before")
     @classmethod
