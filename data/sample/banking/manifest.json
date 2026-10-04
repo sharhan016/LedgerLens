@@ -1,0 +1,15 @@
+{
+  "dataset": "Northstar Union Bank Synthetic Policy Corpus",
+  "synthetic": true,
+  "notice": "All organizations, products, thresholds, people, and procedures are fictional and intended only for the LedgerLens demonstration.",
+  "documents": [
+    {"file": "premium-savings-policy.md", "category": "savings", "version": "2026.2"},
+    {"file": "kyc-aml-manual.md", "category": "kyc_aml", "version": "2026.3"},
+    {"file": "personal-loan-policy.md", "category": "personal_loans", "version": "2026.2"},
+    {"file": "gold-credit-card-policy.md", "category": "credit_cards", "version": "2026.1"},
+    {"file": "home-loan-policy.md", "category": "mortgages", "version": "2026.1"},
+    {"file": "transactions-and-fraud-policy.md", "category": "transactions_fraud", "version": "2026.4"},
+    {"file": "fees-and-rates-schedule.md", "category": "fees_rates", "version": "2026.3"},
+    {"file": "branch-support-procedures.md", "category": "branch_support", "version": "2026.2"}
+  ]
+}

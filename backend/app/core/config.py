@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     jwt_issuer: str = "ledgerlens"
     jwt_audience: str = "ledgerlens-api"
     jwt_access_token_minutes: int = 60
+    max_upload_bytes: int = 10 * 1024 * 1024
+    chunk_size_words: int = 180
+    chunk_overlap_words: int = 30
 
     @field_validator("cors_origins", mode="before")
     @classmethod

@@ -23,4 +23,10 @@ def test_system_status_does_not_claim_planned_features() -> None:
         "status": "ready",
         "vertex_task": "T-01",
     }
-    assert all(item["status"] == "planned" for item in body["capabilities"][1:])
+    assert [item["status"] for item in body["capabilities"]] == [
+        "ready",
+        "ready",
+        "ready",
+        "planned",
+        "planned",
+    ]
