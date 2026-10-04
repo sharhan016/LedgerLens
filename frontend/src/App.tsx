@@ -7,7 +7,7 @@ const plannedCapabilities = [
   { name: "Tenant security", status: "ready" as const, vertex_task: "T-02" },
   { name: "Document ingestion", status: "ready" as const, vertex_task: "T-03" },
   { name: "Hybrid retrieval", status: "ready" as const, vertex_task: "T-04" },
-  { name: "Grounded answers", status: "planned" as const, vertex_task: "T-05" },
+  { name: "Grounded answers", status: "ready" as const, vertex_task: "T-05" },
 ];
 
 export default function App() {

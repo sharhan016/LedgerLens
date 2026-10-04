@@ -50,6 +50,12 @@ make dev-web
 
 Open `http://localhost:5173`. The API is served at `http://localhost:8000`.
 
+Generation defaults to a local OpenAI-compatible server at the URL in `.env.example`.
+Change `LEDGERLENS_LLM_PROVIDER`, `LEDGERLENS_LLM_BASE_URL`,
+`LEDGERLENS_LLM_API_KEY`, and `LEDGERLENS_LLM_MODEL` to use another compatible API or
+OpenRouter. The application never falls back to fabricated answers when a provider or
+authorized source is unavailable.
+
 To run the containerized stack after installing Docker Compose v2:
 
 ```console

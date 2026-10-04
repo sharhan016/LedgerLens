@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.assistant import router as assistant_router
 from app.api.auth import router as auth_router
 from app.api.documents import router as documents_router
 from app.api.ingestion import router as ingestion_router
@@ -28,6 +29,7 @@ def create_app() -> FastAPI:
     application.include_router(documents_router)
     application.include_router(ingestion_router)
     application.include_router(retrieval_router)
+    application.include_router(assistant_router)
     return application
 
 

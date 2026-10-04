@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     retrieval_candidate_limit: int = 30
     retrieval_result_limit: int = 8
     rrf_constant: int = 60
+    llm_provider: str = "local_openai"
+    llm_base_url: str = "http://host.docker.internal:11434/v1"
+    llm_api_key: str | None = None
+    llm_model: str = "qwen2.5:7b-instruct"
+    llm_timeout_seconds: float = 45.0
+    context_max_characters: int = 14_000
 
     @field_validator("cors_origins", mode="before")
     @classmethod
