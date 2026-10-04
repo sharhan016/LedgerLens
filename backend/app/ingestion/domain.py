@@ -36,6 +36,7 @@ class PreparedChunk:
     token_count: int
     section: str | None
     page_number: int | None
+    embedding: tuple[float, ...] | None = None
     metadata: dict[str, object] = field(default_factory=dict)
 
 
@@ -45,4 +46,3 @@ class IngestionResult:
     status: str
     source_sha256: str
     chunks: tuple[PreparedChunk, ...]
-

@@ -30,6 +30,10 @@ See [the delivery plan](docs/architecture/delivery-plan.md) and
 - Docker with the Compose v2 plugin (for the complete local stack)
 - `uv` for the recommended backend workflow
 
+The default `make install` includes the `ml` extra used by the real local Sentence
+Transformers embedding and cross-encoder reranking adapters. Model weights are downloaded
+by those libraries on first use and cached outside the repository.
+
 ## Local setup
 
 ```console
@@ -67,4 +71,3 @@ ledger rather than trusting a manual completion claim.
 LedgerLens must never contain real customer financial data. All demo policies, accounts,
 transactions, and identities introduced in later phases will be fictional and visibly
 labelled as synthetic.
-

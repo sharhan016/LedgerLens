@@ -31,7 +31,7 @@ async def system_status(
             CapabilityStatus(name="API foundation", status="ready", vertex_task="T-01"),
             CapabilityStatus(name="Tenant security", status="ready", vertex_task="T-02"),
             CapabilityStatus(name="Document ingestion", status="ready", vertex_task="T-03"),
-            CapabilityStatus(name="Hybrid retrieval", status="planned", vertex_task="T-04"),
+            CapabilityStatus(name="Hybrid retrieval", status="ready", vertex_task="T-04"),
             CapabilityStatus(name="Grounded answers", status="planned", vertex_task="T-05"),
         ],
     )

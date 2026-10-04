@@ -36,6 +36,7 @@ class SectionAwareChunker:
                         token_count=estimate_tokens(content),
                         section=segment.section,
                         page_number=segment.page_number,
+                        embedding=None,
                     )
                 )
                 if start + self._max_words >= len(words):
@@ -43,4 +44,3 @@ class SectionAwareChunker:
         if not chunks:
             raise ValueError("document contains no content after cleaning")
         return tuple(chunks)
-

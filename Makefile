@@ -1,7 +1,7 @@
 .PHONY: install dev-api dev-web test-backend build-web verify-foundation
 
 install:
-	cd backend && UV_CACHE_DIR=../.cache/uv uv sync --all-groups
+	cd backend && UV_CACHE_DIR=../.cache/uv uv sync --all-groups --extra ml
 	cd frontend && npm ci
 
 dev-api:

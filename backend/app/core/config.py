@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 10 * 1024 * 1024
     chunk_size_words: int = 180
     chunk_overlap_words: int = 30
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    embedding_dimensions: int = 384
+    reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    retrieval_candidate_limit: int = 30
+    retrieval_result_limit: int = 8
+    rrf_constant: int = 60
 
     @field_validator("cors_origins", mode="before")
     @classmethod

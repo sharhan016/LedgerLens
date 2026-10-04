@@ -61,6 +61,7 @@ class SqlAlchemyIngestionRepository:
                     section=chunk.section,
                     page_number=chunk.page_number,
                     token_count=chunk.token_count,
+                    embedding=list(chunk.embedding) if chunk.embedding is not None else None,
                     chunk_metadata={
                         **chunk.metadata,
                         "source": source_key,
@@ -100,4 +101,3 @@ class InMemoryIngestionRepository:
             "status": "ready",
         }
         return document_id
-

@@ -6,7 +6,7 @@ const plannedCapabilities = [
   { name: "API foundation", status: "ready" as const, vertex_task: "T-01" },
   { name: "Tenant security", status: "ready" as const, vertex_task: "T-02" },
   { name: "Document ingestion", status: "ready" as const, vertex_task: "T-03" },
-  { name: "Hybrid retrieval", status: "planned" as const, vertex_task: "T-04" },
+  { name: "Hybrid retrieval", status: "ready" as const, vertex_task: "T-04" },
   { name: "Grounded answers", status: "planned" as const, vertex_task: "T-05" },
 ];
 

@@ -27,6 +27,6 @@ def test_system_status_does_not_claim_planned_features() -> None:
         "ready",
         "ready",
         "ready",
-        "planned",
+        "ready",
         "planned",
     ]

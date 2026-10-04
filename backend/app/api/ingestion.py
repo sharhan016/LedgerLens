@@ -6,6 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings, get_settings
 from app.db.session import get_session
+from app.embeddings.base import EmbeddingProvider
+from app.embeddings.dependencies import get_embedding_provider
 from app.ingestion.chunking import SectionAwareChunker
 from app.ingestion.domain import IngestionMetadata, IngestionSource
 from app.ingestion.parsers import UnsupportedDocumentError
@@ -21,6 +23,7 @@ router = APIRouter(prefix="/api/v1/ingestion", tags=["ingestion"])
 async def get_ingestion_pipeline(
     session: Annotated[AsyncSession, Depends(get_session)],
     settings: Annotated[Settings, Depends(get_settings)],
+    embeddings: Annotated[EmbeddingProvider, Depends(get_embedding_provider)],
 ) -> IngestionPipeline:
     return IngestionPipeline(
         SqlAlchemyIngestionRepository(session),
@@ -28,6 +31,7 @@ async def get_ingestion_pipeline(
             max_words=settings.chunk_size_words,
             overlap_words=settings.chunk_overlap_words,
         ),
+        embedding_provider=embeddings,
     )
 
 
@@ -89,4 +93,3 @@ async def ingest_document(
             for chunk in result.chunks
         ],
     )
-
