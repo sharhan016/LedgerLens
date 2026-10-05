@@ -2,6 +2,7 @@ import hashlib
 import uuid
 
 from app.embeddings.base import EmbeddingProvider
+from app.ingestion.boundaries import Utf8ProcessingBoundary
 from app.ingestion.chunking import SectionAwareChunker
 from app.ingestion.domain import IngestionMetadata, IngestionResult, IngestionSource
 from app.ingestion.parsers import ParserRegistry
@@ -14,11 +15,13 @@ class IngestionPipeline:
         repository: IngestionRepository,
         *,
         parsers: ParserRegistry | None = None,
+        processing_boundary: Utf8ProcessingBoundary | None = None,
         chunker: SectionAwareChunker | None = None,
         embedding_provider: EmbeddingProvider | None = None,
     ) -> None:
         self._repository = repository
         self._parsers = parsers or ParserRegistry()
+        self._processing_boundary = processing_boundary or Utf8ProcessingBoundary()
         self._chunker = chunker or SectionAwareChunker()
         self._embedding_provider = embedding_provider
 
@@ -31,7 +34,8 @@ class IngestionPipeline:
     ) -> IngestionResult:
         source_sha256 = hashlib.sha256(source.content).hexdigest()
         segments = self._parsers.parse(source)
-        base_chunks = self._chunker.chunk(segments)
+        bounded_segments = self._processing_boundary.split(segments)
+        base_chunks = self._chunker.chunk(bounded_segments)
         embeddings = (
             await self._embedding_provider.embed([chunk.content for chunk in base_chunks])
             if self._embedding_provider is not None
