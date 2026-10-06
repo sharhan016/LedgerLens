@@ -5,7 +5,7 @@ import { useAuth } from "./hooks/useAuth";
 import { AssistantPage } from "./pages/AssistantPage";
 import { EvaluationPage } from "./pages/EvaluationPage";
 import { KnowledgePage } from "./pages/KnowledgePage";
-import { LoginPage } from "./pages/LoginPage";
+import { LoginPage } from "./pages/LoginPage3";
 import { OperationsPage } from "./pages/OperationsPage";
 import "./styles.css";
 
