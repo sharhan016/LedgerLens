@@ -4,16 +4,19 @@ import type { AssistantAnswer, Citation, Passage } from "../types/api";
 
 type InspectorTab = "evidence" | "details" | "context";
 
-export function CitationInspector({ citation, passage, queryTrace, latencyMs, showDiagnostics = false, onClose }: {
+export function CitationInspector({ citation, passage, queryTrace, latencyMs, showDetails = false, showDiagnostics = false, onClose }: {
   citation: Citation;
   passage?: Passage;
   queryTrace?: AssistantAnswer["query_trace"];
   latencyMs?: Record<string, number>;
+  showDetails?: boolean;
   showDiagnostics?: boolean;
   onClose: () => void;
 }) {
   const [tab, setTab] = useState<InspectorTab>("evidence");
-  const tabs: InspectorTab[] = showDiagnostics ? ["evidence", "details", "context"] : ["evidence", "details"];
+  const tabs: InspectorTab[] = showDiagnostics
+    ? ["evidence", "details", "context"]
+    : showDetails ? ["evidence", "details"] : ["evidence"];
 
   return (
     <aside className="citation-inspector" aria-label="Citation evidence" aria-live="polite">

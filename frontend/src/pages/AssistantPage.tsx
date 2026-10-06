@@ -62,6 +62,7 @@ export function AssistantPage() {
     ? answer?.passages.find((passage) => passage.chunk_id === selected.chunk_id)
     : undefined;
   const showDiagnostics = session?.user.role === "admin";
+  const showDocumentDetails = session?.user.role === "compliance" || showDiagnostics;
 
   return (
     <div className={selected ? "assistant-workbench inspector-open" : "assistant-workbench"}>
@@ -118,7 +119,11 @@ export function AssistantPage() {
               <div className="assistant-response">
                 <header><div><strong>LedgerLens</strong><span>{answer.latency_ms.total.toFixed(0)} ms</span></div><span className={answer.grounding.grounded ? "answer-state grounded" : "answer-state review"}>{answer.grounding.grounded ? "● Grounded answer" : "● Review required"}</span></header>
                 <p className="answer-copy">{answer.answer}</p>
-                <div className="response-facts"><span>Confidence {(answer.grounding.confidence * 100).toFixed(0)}%</span><span>{answer.cache_hit ? "Semantic cache" : answer.model}</span><span>{answer.query_trace.route}</span></div>
+                <div className="response-facts">
+                  <span>{session?.user.role === "analyst" ? "Source-backed" : `Confidence ${(answer.grounding.confidence * 100).toFixed(0)}%`}</span>
+                  {(session?.user.role === "compliance" || showDiagnostics) && <span>{answer.cache_hit ? "Semantic cache" : answer.model}</span>}
+                  {showDiagnostics && <span>{answer.query_trace.route}</span>}
+                </div>
                 <div className="source-heading"><strong>Sources ({answer.citations.length})</strong><span>Select a source to inspect its evidence</span></div>
                 <div className="assistant-sources" aria-label="Answer sources">
                   {answer.citations.map((citation) => (
@@ -133,7 +138,7 @@ export function AssistantPage() {
         )}
       </section>
 
-      {selected && answer && <CitationInspector citation={selected} latencyMs={answer.latency_ms} onClose={() => setSelected(null)} passage={selectedPassage} queryTrace={answer.query_trace} showDiagnostics={showDiagnostics} />}
+      {selected && answer && <CitationInspector citation={selected} latencyMs={answer.latency_ms} onClose={() => setSelected(null)} passage={selectedPassage} queryTrace={answer.query_trace} showDetails={showDocumentDetails} showDiagnostics={showDiagnostics} />}
     </div>
   );
 }
