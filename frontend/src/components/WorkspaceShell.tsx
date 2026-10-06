@@ -58,11 +58,15 @@ export function WorkspaceShell({
           ))}
         </nav>
         <div className="rail-foot">
-          <div className="api-state">
+          <div className="rail-status">
             <span className={error ? "state-dot error" : "state-dot"} />
-            {data ? "API online" : error ? "API offline" : "Checking"}
+            <span><strong>{data ? "API online" : error ? "API offline" : "Checking systems"}</strong><small>{data ? "All systems operational" : error ? "Service unavailable" : "Reading service status"}</small></span>
           </div>
-          <button className="logout-button" onClick={logout} type="button">End session <span>↗</span></button>
+          <div className="rail-identity">
+            <span className="operator-badge">{roleDetail.initials}</span>
+            <span className="operator-copy"><strong>{session?.display_name}</strong><small>{roleDetail.label}</small></span>
+            <button aria-label="End session" onClick={logout} type="button">›</button>
+          </div>
         </div>
       </aside>
       <section className="workspace-main">
@@ -71,9 +75,9 @@ export function WorkspaceShell({
             <span className="workspace-kicker">Northstar Union Bank / {active}</span>
             <strong>{viewDetail.label}</strong>
           </div>
-          <div className="operator">
-            <span className="operator-badge">{roleDetail.initials}</span>
-            <span className="operator-copy"><strong>{session?.display_name}</strong><small>{roleDetail.label} · Demo environment</small></span>
+          <div className="tenant-chip">
+            <span aria-hidden="true">▥</span>
+            <span><strong>Northstar Union Bank</strong><small>Demo environment</small></span>
           </div>
         </header>
         <div className="workspace-context" role="status">

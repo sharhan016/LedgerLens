@@ -698,6 +698,18 @@ body::before {
 .brand-workspace .logout-button { display: flex; justify-content: space-between; padding: 12px 13px; border-color: rgba(255, 253, 248, .16); color: rgba(255, 253, 248, .74); }
 .brand-workspace .logout-button:hover { color: var(--workspace-ink); background: var(--workspace-paper); }
 
+.brand-workspace .rail-foot { gap: 18px; padding-top: 20px; border-top: 1px solid rgba(255, 253, 248, .13); }
+.rail-status { display: grid; grid-template-columns: 10px 1fr; gap: 10px; align-items: center; padding: 12px; border: 1px solid rgba(255, 253, 248, .13); border-radius: 7px; }
+.rail-status > span:nth-child(2) strong, .rail-status > span:nth-child(2) small { display: block; }
+.rail-status strong { color: var(--workspace-paper); font: 500 .62rem "Satoshi", sans-serif; }
+.rail-status small { margin-top: 4px; color: rgba(255, 253, 248, .42); font: .48rem var(--mono); }
+.rail-identity { display: grid; grid-template-columns: 38px minmax(0, 1fr) 24px; gap: 10px; align-items: center; }
+.rail-identity .operator-badge { width: 38px; height: 38px; }
+.rail-identity .operator-copy strong { color: var(--workspace-paper); font-size: .7rem; }
+.rail-identity .operator-copy small { color: rgba(255, 253, 248, .42); font-size: .48rem; }
+.rail-identity > button { display: grid; width: 24px; height: 32px; place-items: center; border: 0; color: rgba(255, 253, 248, .7); background: transparent; font-size: 1.35rem; cursor: pointer; }
+.rail-identity > button:hover { color: var(--workspace-paper); }
+
 .brand-workspace .workspace-main { position: relative; }
 .brand-workspace .workspace-header {
   min-height: 116px;
@@ -711,6 +723,11 @@ body::before {
 .brand-workspace .operator-badge { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 50%; color: var(--workspace-paper); background: var(--role-accent); font: .55rem var(--mono); }
 .brand-workspace .operator-copy strong { display: block; font-size: .78rem; font-weight: 600; }
 .brand-workspace .operator-copy small { display: block; margin-top: 4px; color: #73797c; }
+.tenant-chip { display: flex; gap: 12px; align-items: center; }
+.tenant-chip > span:first-child { font-size: 1.6rem; }
+.tenant-chip strong, .tenant-chip small { display: block; }
+.tenant-chip strong { font: 500 .77rem "Newsreader", Georgia, serif; }
+.tenant-chip small { margin-top: 4px; color: #73797c; font: .5rem var(--mono); text-transform: uppercase; }
 
 .workspace-context {
   display: grid;
@@ -773,6 +790,14 @@ body::before {
   .brand-workspace .operator-badge { width: 32px; height: 32px; }
   .brand-workspace .operator-copy strong { font-size: .68rem; }
   .brand-workspace .operator-copy small { display: none; }
+  .brand-workspace .rail-status { display: none; }
+  .brand-workspace .rail-identity { grid-template-columns: 1fr; gap: 0; justify-items: center; }
+  .brand-workspace .rail-identity .operator-badge, .brand-workspace .rail-identity .operator-copy { display: none; }
+  .brand-workspace .rail-identity > button { width: 38px; height: 48px; border: 1px solid rgba(255, 253, 248, .16); }
+  .brand-workspace .rail-identity > button::after { content: "Exit"; font: .46rem var(--mono); text-transform: uppercase; }
+  .brand-workspace .rail-identity > button { font-size: 0; }
+  .tenant-chip strong { font-size: .7rem; }
+  .tenant-chip small { display: none; }
   .workspace-context { grid-template-columns: auto 1fr; min-height: 38px; padding: 0 20px; }
   .workspace-context > small { display: none; }
   .brand-workspace .assistant-layout { min-height: calc(100vh - 116px); }

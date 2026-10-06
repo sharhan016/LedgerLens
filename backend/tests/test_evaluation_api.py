@@ -22,10 +22,15 @@ def test_evaluation_summary_is_real_and_permission_protected() -> None:
             "/api/v1/evaluation/summary",
             headers={"Authorization": f"Bearer {token(Role.COMPLIANCE)}"},
         )
+        admin = client.get(
+            "/api/v1/evaluation/summary",
+            headers={"Authorization": f"Bearer {token(Role.ADMIN)}"},
+        )
 
     assert denied.status_code == 403
     assert allowed.status_code == 200
+    assert admin.status_code == 200
+    assert admin.json() == allowed.json()
     assert allowed.json()["recall_at_3"] == 1.0
     assert allowed.json()["answer_term_coverage"] == 1.0
     assert allowed.json()["status"] == "passing"
-

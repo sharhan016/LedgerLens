@@ -14,6 +14,7 @@ COPY backend/alembic.ini ./
 COPY backend/migrations ./migrations
 COPY backend/scripts ./scripts
 COPY data /data
+COPY evaluation /evaluation
 RUN chmod +x scripts/start.sh
 
 EXPOSE 8000

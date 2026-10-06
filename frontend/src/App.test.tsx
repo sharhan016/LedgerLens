@@ -58,6 +58,8 @@ describe("LedgerLens workspace", () => {
     render(<AuthProvider><App /></AuthProvider>);
 
     expect(await screen.findByText("Knowledge Assistant")).toBeInTheDocument();
+    expect(screen.getByText("Mira Fernandes")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "End session" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Knowledge base/ }));
     expect(await screen.findByText("Premium Savings Policy")).toBeInTheDocument();
     expect(screen.getByText("ready")).toBeInTheDocument();
