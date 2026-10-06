@@ -77,9 +77,10 @@ See [system architecture](docs/architecture/system-overview.md),
 
 The repository includes a Hostinger-oriented production Compose contract and a gated
 GitHub Actions workflow for `ledgerlens.sharhan.dev`. They keep PostgreSQL and FastAPI off
-public host ports, route same-origin `/api/` traffic through the frontend, and attach only
-the frontend to Hostinger's shared Traefik network.
+public host ports, route same-origin `/api/` traffic through the frontend, and let the
+existing host-networked Traefik discover that frontend through Docker labels.
 
 No VPS or DNS changes are made by repository setup. Before enabling deployment, follow the
-[Hostinger deployment guide](docs/deployment/hostinger.md) to configure the VPS Traefik
-project, Cloudflare record, GitHub Secrets, VM ID, environment mode, and first-run checks.
+[Hostinger deployment guide](docs/deployment/hostinger.md) to verify the existing VPS
+Traefik project, configure the Cloudflare record, GitHub Secrets, VM ID, environment mode,
+and first-run checks.

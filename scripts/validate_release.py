@@ -33,5 +33,11 @@ require(
     "HOSTINGER_API_KEY",
     "HOSTINGER_VM_ID",
 )
+require(
+    "docs/deployment/hostinger.md",
+    "`network_mode: host`",
+    "No shared Docker network is required",
+    "host-to-LedgerLens-bridge",
+)
 require("README.md", "demo-extractive-not-llm", "deterministic_demo")
 print("release contracts validated")

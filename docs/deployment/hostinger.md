@@ -6,8 +6,8 @@ key, or certificate. Repository preparation does not deploy the application or c
 Cloudflare DNS.
 
 The implementation follows Hostinger's official
-[Deploy to Hostinger VPS action](https://github.com/hostinger/deploy-on-vps) and its
-[shared Traefik network model](https://www.hostinger.com/support/connecting-multiple-docker-compose-projects-using-traefik-in-hostinger-docker-manager/).
+[Deploy to Hostinger VPS action](https://github.com/hostinger/deploy-on-vps) and Traefik's
+[Docker provider routing model](https://doc.traefik.io/traefik/providers/docker/).
 
 ## Runtime contract
 
@@ -19,18 +19,25 @@ The implementation follows Hostinger's official
 | `backend` | `backend/Dockerfile` | 8000 | Database-backed `/health/ready` | No | None |
 | `db` | `pgvector/pgvector:pg16` | 5432 | `pg_isready` | No | `ledgerlens_postgres` volume |
 
-Only `frontend` joins the external Traefik network. Backend and PostgreSQL are reachable
-only on the Compose application network. The production Compose file has no host `ports`
-mappings.
+All three services use LedgerLens's private Compose application network. Only `frontend`
+has `traefik.enable=true`; backend and PostgreSQL are not exposed to Traefik. The
+production Compose file has no host `ports` mappings and declares no external network.
 
 The existing `docker-compose.yml` remains the local demo contract, including ports 5173,
 8000, and 5432. Continue to use `docker compose up --build` locally.
 
 ## Public routing and TLS
 
-Hostinger's Traefik project must exist before LedgerLens is deployed. Its shared external
-Docker network is expected to be named `traefik-proxy`; set the `TRAEFIK_NETWORK`
-repository variable if the actual network has a different name.
+The existing Hostinger Traefik project at `/docker/traefik/docker-compose.yml` runs with
+`network_mode: host`, watches the same Docker Engine, and has Docker-provider discovery
+enabled with `exposedByDefault=false`. It remains independently managed and must not be
+deleted, recreated, or modified by LedgerLens.
+
+No shared Docker network is required. The Docker provider reads the LedgerLens frontend's
+labels and private bridge IP from the Docker API. Because the frontend belongs to exactly
+one network, Traefik does not need a `traefik.docker.network` override. Running in the host
+network namespace allows the existing Traefik process to connect to that bridge-container
+IP on port 80 under normal Linux Docker networking.
 
 The frontend labels configure:
 
@@ -100,7 +107,6 @@ Optional Actions variables and workflow defaults:
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `TRAEFIK_NETWORK` | `traefik-proxy` | Must match the network created by Hostinger's Traefik project |
 | `LEDGERLENS_ENV` | `showcase` | Use `production` only after replacing all demo adapters and identity |
 | `LEDGERLENS_ML_MODE` | `deterministic_demo` | Production value: `sentence_transformers` |
 | `LEDGERLENS_INSTALL_ML` | `false` | Must be `true` for Sentence Transformers/CrossEncoder |
@@ -149,10 +155,10 @@ use the persistent volume.
 
 These are manual future actions; none were performed during repository preparation.
 
-1. Provision a Hostinger VPS using the current Docker template.
-2. Install Hostinger's Traefik project template in Docker Manager.
-3. Confirm the external network name and `websecure`/`letsencrypt` identifiers match the
-   production Compose labels.
+1. Confirm the existing `/docker/traefik` project is running; do not recreate it.
+2. Confirm its Docker provider can see containers from the VPS Docker Engine.
+3. Confirm its `websecure` entrypoint and `letsencrypt` resolver still match the production
+   Compose labels.
 4. In Cloudflare, create an `A` record named `ledgerlens` pointing to the VPS public IPv4.
    Use DNS-only mode for initial certificate issuance unless the chosen Traefik/Cloudflare
    setup is already verified.
@@ -174,6 +180,14 @@ Use Hostinger Docker Manager to inspect project status and container logs. Expec
 - Frontend healthy: Nginx reaches backend readiness through its internal proxy.
 - Public healthy: Traefik serves the same readiness URL over HTTPS.
 
+The final public check also proves the VPS host namespace can reach the frontend's Docker
+bridge IP. This routing path depends on the VPS Docker bridge and firewall configuration
+and cannot be proven from repository files alone. If it fails while Traefik has discovered
+the router correctly, the minimum VPS-side correction is to allow host-to-LedgerLens-bridge
+traffic on frontend port 80. Do not publish backend/PostgreSQL ports and do not invent a
+`traefik-proxy` network. If host-to-bridge routing has been explicitly disabled, resolving
+that constraint requires a deliberate VPS networking decision outside this repository.
+
 `/health/live` proves only that the FastAPI process is running. `/health/ready` proves the
 process can reach PostgreSQL.
 
@@ -193,8 +207,10 @@ Do not remove the named volume during an application rollback.
 
 Before the first deployment, the operator must still provide:
 
-- a Hostinger VPS and official Traefik project;
-- the confirmed Traefik external-network and resolver names;
+- the existing Hostinger Traefik project running with Docker-provider access;
+- confirmation that its `websecure` entrypoint and `letsencrypt` resolver remain named as
+  expected;
+- a post-deployment check that host-networked Traefik can reach the frontend bridge IP;
 - GitHub Secrets and `HOSTINGER_VM_ID`;
 - the Cloudflare DNS record;
 - a decision to run the synthetic `showcase` mode or complete real identity/provider setup

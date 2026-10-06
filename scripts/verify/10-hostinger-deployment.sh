@@ -12,6 +12,14 @@ if rg -n "localhost|127\.0\.0\.1" frontend/dist; then
   exit 1
 fi
 
+if rg -n "TRAEFIK_NETWORK|traefik-proxy" \
+  docker-compose.production.yml \
+  .github/workflows/deploy-hostinger.yml \
+  .env.example; then
+  echo "deployment contract contains an obsolete shared Traefik network assumption" >&2
+  exit 1
+fi
+
 if docker compose version >/dev/null 2>&1; then
   compose=(docker compose)
 elif docker-compose version >/dev/null 2>&1; then
@@ -44,7 +52,10 @@ assert services["frontend"]["labels"]["traefik.http.routers.ledgerlens.rule"] ==
 assert services["frontend"]["labels"][
     "traefik.http.services.ledgerlens.loadbalancer.server.port"
 ] == "80"
-assert compose["networks"]["traefik"]["external"] is True
+assert "traefik.docker.network" not in services["frontend"]["labels"]
+assert set(services["frontend"]["networks"]) == {"application"}
+assert set(compose["networks"]) == {"application"}
+assert not any(network.get("external") for network in compose["networks"].values())
 assert any(
     volume["target"] == "/var/lib/postgresql/data"
     for volume in services["db"]["volumes"]
