@@ -57,7 +57,7 @@ describe("LedgerLens workspace", () => {
 
     render(<AuthProvider><App /></AuthProvider>);
 
-    expect(await screen.findByText("Ask against the record.")).toBeInTheDocument();
+    expect(await screen.findByText("Knowledge Assistant")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Knowledge base/ }));
     expect(await screen.findByText("Premium Savings Policy")).toBeInTheDocument();
     expect(screen.getByText("ready")).toBeInTheDocument();

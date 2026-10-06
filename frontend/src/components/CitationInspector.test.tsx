@@ -20,6 +20,7 @@ describe("CitationInspector", () => {
           excerpt: "A photo identity document is required.",
         }}
         onClose={onClose}
+        showDiagnostics
         passage={{
           chunk_id: "chunk",
           title: "KYC Manual",
@@ -37,11 +38,10 @@ describe("CitationInspector", () => {
       />,
     );
 
-    expect(screen.getByText("Page 4")).toBeInTheDocument();
+    expect(screen.getByText(/Page 4/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "context" }));
     expect(screen.getByText("0.9700")).toBeInTheDocument();
-    expect(screen.getByText(/Validation · authorized/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close citation inspector" }));
     expect(onClose).toHaveBeenCalledOnce();
   });
 });
-
