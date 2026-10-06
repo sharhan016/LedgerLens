@@ -73,7 +73,7 @@ router = APIRouter(tags=["observability"])
 
 @router.get("/api/v1/operations/metrics")
 async def metrics(
-    principal: Annotated[Principal, Depends(require_permission(Permission.AUDIT_READ))],
+    principal: Annotated[Principal, Depends(require_permission(Permission.OPERATIONS_READ))],
 ) -> dict[str, object]:
     return {
         "content_policy": "paths, status codes, counts, and latency only",

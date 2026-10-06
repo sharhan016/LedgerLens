@@ -21,14 +21,19 @@ def test_request_metrics_record_only_route_status_count_and_latency() -> None:
             "/api/v1/operations/metrics",
             headers={"Authorization": f"Bearer {access_token(Role.VIEWER)}"},
         )
-        metrics = client.get(
+        compliance_denied = client.get(
             "/api/v1/operations/metrics",
             headers={"Authorization": f"Bearer {access_token(Role.COMPLIANCE)}"},
+        )
+        metrics = client.get(
+            "/api/v1/operations/metrics",
+            headers={"Authorization": f"Bearer {access_token(Role.ADMIN)}"},
         )
 
     assert health.headers["X-Request-ID"] == "test-request"
     assert float(health.headers["X-Response-Time-Ms"]) >= 0
     assert denied.status_code == 403
+    assert compliance_denied.status_code == 403
     assert metrics.status_code == 200
     body = metrics.json()
     assert body["content_policy"] == "paths, status codes, counts, and latency only"
@@ -36,4 +41,3 @@ def test_request_metrics_record_only_route_status_count_and_latency() -> None:
     assert "authorization" not in serialized.lower()
     assert "bearer" not in serialized.lower()
     assert any(item["route"] == "/health/live" for item in body["metrics"])
-

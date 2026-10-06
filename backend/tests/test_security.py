@@ -26,6 +26,10 @@ def test_signed_token_round_trip_preserves_tenant_and_role() -> None:
     assert claims["tenant_id"] == str(principal.tenant_id)
     assert claims["role"] == "compliance"
     assert principal.can(Permission.AUDIT_READ)
+    assert not principal.can(Permission.OPERATIONS_READ)
+    assert Principal(principal.user_id, principal.tenant_id, Role.ADMIN).can(
+        Permission.OPERATIONS_READ
+    )
     assert not Principal(principal.user_id, principal.tenant_id, Role.VIEWER).can(
         Permission.DOCUMENTS_WRITE
     )
@@ -34,4 +38,3 @@ def test_signed_token_round_trip_preserves_tenant_and_role() -> None:
 def test_invalid_token_is_rejected_without_leaking_decode_details() -> None:
     with pytest.raises(TokenValidationError, match="invalid or expired"):
         TokenService(settings()).parse("not-a-token")
-

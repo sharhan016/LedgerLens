@@ -1,17 +1,11 @@
 import type { ReactNode } from "react";
 
 import { LedgerLensMark } from "./LedgerLensMark";
+import { workspaceNavigationFor, type WorkspaceView } from "../config/workspaceAccess";
 import { useAuth } from "../hooks/useAuth";
 import { useSystemStatus } from "../hooks/useSystemStatus";
 
-export type WorkspaceView = "assistant" | "knowledge" | "evaluation" | "operations";
-
-const navigation: Array<{ id: WorkspaceView; label: string; index: string }> = [
-  { id: "assistant", label: "Ask LedgerLens", index: "01" },
-  { id: "knowledge", label: "Knowledge base", index: "02" },
-  { id: "evaluation", label: "Evaluation", index: "03" },
-  { id: "operations", label: "Operations", index: "04" },
-];
+export type { WorkspaceView } from "../config/workspaceAccess";
 
 const viewDetails: Record<WorkspaceView, { label: string; descriptor: string }> = {
   assistant: { label: "Evidence desk", descriptor: "Ask · retrieve · verify" },
@@ -41,6 +35,7 @@ export function WorkspaceShell({
   const role = session?.user.role ?? "viewer";
   const roleDetail = roleDetails[role];
   const viewDetail = viewDetails[active];
+  const navigation = workspaceNavigationFor(role);
 
   return (
     <main className={`workspace brand-workspace role-${role}`}>
@@ -58,7 +53,7 @@ export function WorkspaceShell({
               type="button"
             >
               <span>{item.index}</span>
-              <strong>{item.label}<small>{viewDetails[item.id].descriptor}</small></strong>
+              <strong>{item.label}<small>{item.descriptor}</small></strong>
             </button>
           ))}
         </nav>

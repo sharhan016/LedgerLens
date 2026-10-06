@@ -14,6 +14,7 @@ class Permission(StrEnum):
     DOCUMENTS_READ = "documents:read"
     DOCUMENTS_WRITE = "documents:write"
     AUDIT_READ = "audit:read"
+    OPERATIONS_READ = "operations:read"
     USERS_MANAGE = "users:manage"
 
 
@@ -35,4 +36,3 @@ class Principal:
 
     def can(self, permission: Permission) -> bool:
         return permission in ROLE_PERMISSIONS[self.role]
-

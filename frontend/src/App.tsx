@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { WorkspaceShell, type WorkspaceView } from "./components/WorkspaceShell";
+import { WorkspaceShell } from "./components/WorkspaceShell";
+import { canAccessWorkspaceView, type WorkspaceView } from "./config/workspaceAccess";
 import { useAuth } from "./hooks/useAuth";
 import { AssistantPage } from "./pages/AssistantPage";
 import { EvaluationPage } from "./pages/EvaluationPage";
@@ -13,12 +14,18 @@ export default function App() {
   const { session } = useAuth();
   const [view, setView] = useState<WorkspaceView>("assistant");
   if (!session) return <LoginPage />;
+  const activeView = canAccessWorkspaceView(session.user.role, view) ? view : "assistant";
+
+  function navigate(nextView: WorkspaceView) {
+    if (session && canAccessWorkspaceView(session.user.role, nextView)) setView(nextView);
+  }
+
   return (
-    <WorkspaceShell active={view} onNavigate={setView}>
-      {view === "assistant" && <AssistantPage />}
-      {view === "knowledge" && <KnowledgePage />}
-      {view === "evaluation" && <EvaluationPage />}
-      {view === "operations" && <OperationsPage />}
+    <WorkspaceShell active={activeView} onNavigate={navigate}>
+      {activeView === "assistant" && <AssistantPage />}
+      {activeView === "knowledge" && <KnowledgePage />}
+      {activeView === "evaluation" && <EvaluationPage />}
+      {activeView === "operations" && <OperationsPage />}
     </WorkspaceShell>
   );
 }
