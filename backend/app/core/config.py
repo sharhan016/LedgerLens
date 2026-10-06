@@ -1,7 +1,8 @@
 from functools import lru_cache
+from typing import Annotated
 
 from pydantic import Field, field_validator, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -15,8 +16,9 @@ class Settings(BaseSettings):
     environment: str = Field(default="development", alias="LEDGERLENS_ENV")
     api_host: str = "0.0.0.0"
     api_port: int = 8000
+    api_docs_enabled: bool = True
     log_level: str = "INFO"
-    cors_origins: tuple[str, ...] = (
+    cors_origins: Annotated[tuple[str, ...], NoDecode] = (
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     )
@@ -60,7 +62,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def require_production_secret(self) -> "Settings":
-        if self.environment == "production" and self.jwt_secret.startswith("development-"):
+        insecure_secrets = {
+            "development-only-secret-change-before-production",
+            "replace-with-at-least-32-random-characters",
+        }
+        if self.environment == "production" and self.jwt_secret in insecure_secrets:
             raise ValueError("LEDGERLENS_JWT_SECRET must be configured in production")
         if self.environment == "production" and self.demo_auth_enabled:
             raise ValueError("LEDGERLENS_DEMO_AUTH_ENABLED must be false in production")

@@ -1,6 +1,6 @@
 import type { SystemStatus } from "../types/system";
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
 export async function getSystemStatus(signal?: AbortSignal): Promise<SystemStatus> {
   const response = await fetch(`${apiBaseUrl}/api/v1/system/status`, { signal });
@@ -9,4 +9,3 @@ export async function getSystemStatus(signal?: AbortSignal): Promise<SystemStatu
   }
   return response.json() as Promise<SystemStatus>;
 }
-

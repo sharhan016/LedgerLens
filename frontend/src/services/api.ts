@@ -8,7 +8,7 @@ import type {
   Role,
 } from "../types/api";
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
 export class ApiError extends Error {
   constructor(
@@ -88,4 +88,3 @@ export async function ingestDocument(
   body.set("source_type", "policy");
   return request("/api/v1/ingestion/documents", { method: "POST", body }, token);
 }
-

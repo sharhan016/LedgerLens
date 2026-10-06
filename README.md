@@ -72,3 +72,14 @@ the Playwright browser journey.
 See [system architecture](docs/architecture/system-overview.md),
 [delivery plan](docs/architecture/delivery-plan.md), and the
 [demo runbook](docs/demo/runbook.md).
+
+## Deployment preparation
+
+The repository includes a Hostinger-oriented production Compose contract and a gated
+GitHub Actions workflow for `ledgerlens.sharhan.dev`. They keep PostgreSQL and FastAPI off
+public host ports, route same-origin `/api/` traffic through the frontend, and attach only
+the frontend to Hostinger's shared Traefik network.
+
+No VPS or DNS changes are made by repository setup. Before enabling deployment, follow the
+[Hostinger deployment guide](docs/deployment/hostinger.md) to configure the VPS Traefik
+project, Cloudflare record, GitHub Secrets, VM ID, environment mode, and first-run checks.

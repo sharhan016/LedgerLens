@@ -1,0 +1,98 @@
+name: Verify and deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ledgerlens-hostinger-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install 3.12
+
+      - name: Verify backend
+        working-directory: backend
+        run: |
+          uv sync --all-groups
+          uv run ruff check app tests migrations
+          uv run pytest
+          uv run alembic upgrade head --sql > /tmp/ledgerlens-release.sql
+          uv run python -m app.evaluation.benchmark \
+            --dataset ../evaluation/datasets/banking-rag-v1.jsonl \
+            --corpus ../data/sample/banking \
+            --output /tmp/ledgerlens-evaluation-report.json
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Verify frontend
+        working-directory: frontend
+        env:
+          VITE_API_BASE_URL: ""
+        run: |
+          npm ci
+          npm test
+          npm run build
+          ! grep -R -E "localhost|127\\.0\\.0\\.1" dist
+
+      - name: Validate production Compose
+        env:
+          POSTGRES_PASSWORD: ci-url-safe-password
+          LEDGERLENS_JWT_SECRET: ci-only-secret-with-at-least-thirty-two-characters
+        run: docker compose -f docker-compose.production.yml config --quiet
+
+      - name: Validate release contracts
+        run: python3 scripts/validate_release.py
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Deploy Compose project through Hostinger
+        uses: hostinger/deploy-on-vps@v2
+        with:
+          api-key: ${{ secrets.HOSTINGER_API_KEY }}
+          virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
+          project-name: ledgerlens
+          docker-compose-path: docker-compose.production.yml
+          environment-variables: |
+            POSTGRES_DB=ledgerlens
+            POSTGRES_USER=ledgerlens
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            LEDGERLENS_JWT_SECRET=${{ secrets.LEDGERLENS_JWT_SECRET }}
+            LEDGERLENS_ENV=${{ vars.LEDGERLENS_ENV || 'showcase' }}
+            LEDGERLENS_API_DOCS_ENABLED=false
+            LEDGERLENS_ML_MODE=${{ vars.LEDGERLENS_ML_MODE || 'deterministic_demo' }}
+            LEDGERLENS_INSTALL_ML=${{ vars.LEDGERLENS_INSTALL_ML || 'false' }}
+            LEDGERLENS_LLM_PROVIDER=${{ vars.LEDGERLENS_LLM_PROVIDER || 'demo_extractive' }}
+            LEDGERLENS_LLM_BASE_URL=${{ vars.LEDGERLENS_LLM_BASE_URL || 'https://openrouter.ai/api/v1' }}
+            LEDGERLENS_LLM_MODEL=${{ vars.LEDGERLENS_LLM_MODEL || 'openai/gpt-4o-mini' }}
+            LEDGERLENS_LLM_API_KEY=${{ secrets.LEDGERLENS_LLM_API_KEY }}
+            LEDGERLENS_DEMO_AUTH_ENABLED=${{ vars.LEDGERLENS_DEMO_AUTH_ENABLED || 'true' }}
+            LEDGERLENS_DEMO_SEED_ENABLED=${{ vars.LEDGERLENS_DEMO_SEED_ENABLED || 'true' }}
+            LEDGERLENS_REGULATORY_API_MODE=${{ vars.LEDGERLENS_REGULATORY_API_MODE || 'fixture' }}
+            LEDGERLENS_REGULATORY_API_URL=${{ vars.LEDGERLENS_REGULATORY_API_URL }}
+            TRAEFIK_NETWORK=${{ vars.TRAEFIK_NETWORK || 'traefik-proxy' }}

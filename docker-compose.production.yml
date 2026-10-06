@@ -1,0 +1,105 @@
+name: ledgerlens
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ledgerlens}
+      POSTGRES_USER: ${POSTGRES_USER:-ledgerlens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - ledgerlens_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - application
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        INSTALL_ML: ${LEDGERLENS_INSTALL_ML:-false}
+    restart: unless-stopped
+    environment:
+      LEDGERLENS_ENV: ${LEDGERLENS_ENV:-showcase}
+      LEDGERLENS_API_HOST: 0.0.0.0
+      LEDGERLENS_API_PORT: 8000
+      LEDGERLENS_API_DOCS_ENABLED: ${LEDGERLENS_API_DOCS_ENABLED:-false}
+      LEDGERLENS_LOG_LEVEL: ${LEDGERLENS_LOG_LEVEL:-INFO}
+      LEDGERLENS_CORS_ORIGINS: https://ledgerlens.sharhan.dev
+      LEDGERLENS_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ledgerlens}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@db:5432/${POSTGRES_DB:-ledgerlens}
+      LEDGERLENS_JWT_SECRET: ${LEDGERLENS_JWT_SECRET:?LEDGERLENS_JWT_SECRET is required}
+      LEDGERLENS_JWT_ISSUER: ${LEDGERLENS_JWT_ISSUER:-ledgerlens}
+      LEDGERLENS_JWT_AUDIENCE: ${LEDGERLENS_JWT_AUDIENCE:-ledgerlens-api}
+      LEDGERLENS_ML_MODE: ${LEDGERLENS_ML_MODE:-deterministic_demo}
+      LEDGERLENS_EMBEDDING_MODEL: ${LEDGERLENS_EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      LEDGERLENS_EMBEDDING_DIMENSIONS: ${LEDGERLENS_EMBEDDING_DIMENSIONS:-384}
+      LEDGERLENS_RERANKER_MODEL: ${LEDGERLENS_RERANKER_MODEL:-cross-encoder/ms-marco-MiniLM-L-6-v2}
+      LEDGERLENS_LLM_PROVIDER: ${LEDGERLENS_LLM_PROVIDER:-demo_extractive}
+      LEDGERLENS_LLM_BASE_URL: ${LEDGERLENS_LLM_BASE_URL:-https://openrouter.ai/api/v1}
+      LEDGERLENS_LLM_API_KEY: ${LEDGERLENS_LLM_API_KEY:-}
+      LEDGERLENS_LLM_MODEL: ${LEDGERLENS_LLM_MODEL:-openai/gpt-4o-mini}
+      LEDGERLENS_REGULATORY_API_MODE: ${LEDGERLENS_REGULATORY_API_MODE:-fixture}
+      LEDGERLENS_REGULATORY_API_URL: ${LEDGERLENS_REGULATORY_API_URL:-}
+      LEDGERLENS_REGULATORY_FIXTURE_PATH: /data/sample/api/regulatory-bulletins.json
+      LEDGERLENS_DEMO_AUTH_ENABLED: ${LEDGERLENS_DEMO_AUTH_ENABLED:-true}
+      LEDGERLENS_DEMO_SEED_ENABLED: ${LEDGERLENS_DEMO_SEED_ENABLED:-true}
+      LEDGERLENS_DEMO_DATA_PATH: /data/sample/banking
+      LEDGERLENS_SEMANTIC_CACHE_SIMILARITY_THRESHOLD: ${LEDGERLENS_SEMANTIC_CACHE_SIMILARITY_THRESHOLD:-0.92}
+      LEDGERLENS_SEMANTIC_CACHE_TTL_MINUTES: ${LEDGERLENS_SEMANTIC_CACHE_TTL_MINUTES:-60}
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    expose:
+      - "8000"
+    networks:
+      - application
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ""
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    expose:
+      - "80"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_NETWORK:-traefik-proxy}
+      - traefik.http.routers.ledgerlens.rule=Host(`ledgerlens.sharhan.dev`)
+      - traefik.http.routers.ledgerlens.entrypoints=websecure
+      - traefik.http.routers.ledgerlens.tls=true
+      - traefik.http.routers.ledgerlens.tls.certresolver=letsencrypt
+      - traefik.http.services.ledgerlens.loadbalancer.server.port=80
+    networks:
+      - application
+      - traefik
+
+volumes:
+  ledgerlens_postgres:
+
+networks:
+  application:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik-proxy}
