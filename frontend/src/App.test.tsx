@@ -81,4 +81,20 @@ describe("LedgerLens workspace", () => {
     expect(screen.queryByRole("button", { name: /Evaluation/ }) !== null).toBe(evaluation);
     expect(screen.queryByRole("button", { name: /Operations/ }) !== null).toBe(operations);
   });
+
+  it.each([
+    { role: "analyst" as const, heading: "Read-only access", classification: false, preset: false },
+    { role: "compliance" as const, heading: "Add governed knowledge", classification: false, preset: true },
+    { role: "admin" as const, heading: "Add and classify knowledge", classification: true, preset: false },
+  ])("tailors knowledge controls for $role", async ({ role, heading, classification, preset }) => {
+    localStorage.setItem("ledgerlens.demo-session", JSON.stringify(sessionFor(role)));
+    stubWorkspaceRequests();
+
+    render(<AuthProvider><App /></AuthProvider>);
+    fireEvent.click(await screen.findByRole("button", { name: /Knowledge base/ }));
+
+    expect(await screen.findByRole("heading", { name: heading })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Classification") !== null).toBe(classification);
+    expect(screen.queryByText(/Policy staff · Analyst/) !== null).toBe(preset);
+  });
 });

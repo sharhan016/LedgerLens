@@ -10,8 +10,11 @@ export function KnowledgePage() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [version, setVersion] = useState("2026.1");
+  const [classification, setClassification] = useState("internal");
+  const [accessPreset, setAccessPreset] = useState("analyst,compliance,admin");
   const [status, setStatus] = useState<string | null>(null);
   const canIngest = session?.user.role === "compliance" || session?.user.role === "admin";
+  const isAdmin = session?.user.role === "admin";
 
   function refresh() {
     if (!session) return;
@@ -28,7 +31,8 @@ export function KnowledgePage() {
       const result = await ingestDocument(session.access_token, file, {
         title,
         version,
-        classification: "internal",
+        classification: isAdmin ? classification : "internal",
+        allowedRoles: isAdmin ? accessPreset : "analyst,compliance,admin",
       });
       setStatus(`Ready · ${result.chunks.length} chunks · ${result.document_id.slice(0, 8)}`);
       setFile(null);
@@ -56,22 +60,27 @@ export function KnowledgePage() {
             </article>
           )) : <div className="register-empty">No documents are visible for this persona yet.</div>}
         </section>
-        <aside className="ingestion-desk">
-          <span className="section-label">Ingestion desk</span>
-          <h2>{canIngest ? "Add governed knowledge" : "Read-only access"}</h2>
+        <aside className={`ingestion-desk ${isAdmin ? "admin-governance" : ""}`}>
+          <span className="section-label">{isAdmin ? "Governance controls" : "Ingestion desk"}</span>
+          <h2>{isAdmin ? "Add and classify knowledge" : canIngest ? "Add governed knowledge" : "Read-only access"}</h2>
           {canIngest ? (
             <form onSubmit={(event) => void submit(event)}>
-              <label>Policy file<input accept=".md,.txt,.pdf" onChange={(event) => setFile(event.target.files?.[0] ?? null)} type="file" /></label>
-              <label>Document title<input onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Retail KYC Manual" value={title} /></label>
-              <label>Version<input onChange={(event) => setVersion(event.target.value)} value={version} /></label>
+              <label htmlFor="policy-file">Policy file<input accept=".md,.txt,.pdf" id="policy-file" onChange={(event) => setFile(event.target.files?.[0] ?? null)} type="file" /></label>
+              <label htmlFor="document-title">Document title<input id="document-title" onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Retail KYC Manual" value={title} /></label>
+              <label htmlFor="document-version">Version<input id="document-version" onChange={(event) => setVersion(event.target.value)} value={version} /></label>
+              {isAdmin ? (
+                <div className="governance-fields">
+                  <label htmlFor="document-classification">Classification<select id="document-classification" onChange={(event) => setClassification(event.target.value)} value={classification}><option value="internal">Internal</option><option value="restricted">Restricted</option><option value="confidential">Confidential</option></select></label>
+                  <label htmlFor="document-visibility">Visible to<select id="document-visibility" onChange={(event) => setAccessPreset(event.target.value)} value={accessPreset}><option value="viewer,analyst,compliance,admin">All authorized users</option><option value="analyst,compliance,admin">Policy staff</option><option value="compliance,admin">Compliance and Admin</option><option value="admin">Admin only</option></select></label>
+                </div>
+              ) : <p className="access-preset"><strong>Access preset</strong><span>Policy staff · Analyst, Compliance and Admin</span></p>}
               <button disabled={!file || !title} type="submit">Ingest, chunk & index</button>
               {status && <p className="ingestion-status" role="status">{status}</p>}
             </form>
-          ) : <p>Your analyst role can inspect authorized sources but cannot change the knowledge base.</p>}
+          ) : <p>Your Analyst role can inspect authorized sources but cannot change document content, classification, or visibility.</p>}
           <div className="format-note"><strong>Accepted</strong><span>Markdown · Text · PDF</span><strong>Limit</strong><span>10 MB per file</span></div>
         </aside>
       </div>
     </div>
   );
 }
-

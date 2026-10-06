@@ -78,13 +78,14 @@ export function getMetrics(token: string): Promise<OperationsMetrics> {
 export async function ingestDocument(
   token: string,
   file: File,
-  fields: { title: string; version: string; classification: string },
+  fields: { title: string; version: string; classification: string; allowedRoles: string },
 ): Promise<{ document_id: string; status: string; chunks: unknown[] }> {
   const body = new FormData();
   body.set("file", file);
   body.set("title", fields.title);
   body.set("version", fields.version);
   body.set("classification", fields.classification);
+  body.set("allowed_roles", fields.allowedRoles);
   body.set("source_type", "policy");
   return request("/api/v1/ingestion/documents", { method: "POST", body }, token);
 }
