@@ -11,5 +11,4 @@ backend/.pytest_cache
 backend/.ruff_cache
 backend/.venv
 docs
-evaluation
 frontend
