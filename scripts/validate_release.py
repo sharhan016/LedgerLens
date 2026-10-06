@@ -31,8 +31,8 @@ require(
     "astral-sh/setup-uv@v10.2.0",
     "hostinger/deploy-on-vps@v2",
     "docker-compose.production.yml",
-    "HOSTINGER_API_KEY",
-    "HOSTINGER_VM_ID",
+    "api-key: ${{ secrets.HOSTINGER_API_KEY }}",
+    "virtual-machine: ${{ secrets.HOSTINGER_VM_ID }}",
 )
 require(
     "docs/deployment/hostinger.md",

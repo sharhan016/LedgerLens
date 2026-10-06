@@ -88,6 +88,7 @@ Required Actions secrets:
 | Secret | Purpose |
 | --- | --- |
 | `HOSTINGER_API_KEY` | Authenticates Hostinger's official deployment action |
+| `HOSTINGER_VM_ID` | Numeric Hostinger virtual-machine identifier |
 | `POSTGRES_PASSWORD` | Initializes and authenticates PostgreSQL; use a strong URL-safe value |
 | `LEDGERLENS_JWT_SECRET` | Signs access tokens; use at least 32 random characters |
 
@@ -96,12 +97,6 @@ Optional Actions secret:
 | Secret | Purpose |
 | --- | --- |
 | `LEDGERLENS_LLM_API_KEY` | Required by OpenRouter or another configured remote provider |
-
-Required Actions variable:
-
-| Variable | Purpose |
-| --- | --- |
-| `HOSTINGER_VM_ID` | Numeric Hostinger virtual-machine identifier |
 
 Optional Actions variables and workflow defaults:
 
@@ -162,7 +157,7 @@ These are manual future actions; none were performed during repository preparati
 4. In Cloudflare, create an `A` record named `ledgerlens` pointing to the VPS public IPv4.
    Use DNS-only mode for initial certificate issuance unless the chosen Traefik/Cloudflare
    setup is already verified.
-5. Add the required GitHub Secrets and `HOSTINGER_VM_ID` variable listed above.
+5. Add the required GitHub Secrets listed above.
 6. Confirm the repository visibility/deploy-key requirement.
 7. Push to `main` or manually run **Verify and deploy to Hostinger**.
 8. Wait for all three containers to become healthy in Hostinger Docker Manager.
@@ -211,7 +206,7 @@ Before the first deployment, the operator must still provide:
 - confirmation that its `websecure` entrypoint and `letsencrypt` resolver remain named as
   expected;
 - a post-deployment check that host-networked Traefik can reach the frontend bridge IP;
-- GitHub Secrets and `HOSTINGER_VM_ID`;
+- the required GitHub Secrets;
 - the Cloudflare DNS record;
 - a decision to run the synthetic `showcase` mode or complete real identity/provider setup
   for strict `production` mode.
