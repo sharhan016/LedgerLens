@@ -89,7 +89,7 @@ Required Actions secrets:
 | --- | --- |
 | `HOSTINGER_API_KEY` | Authenticates Hostinger's official deployment action |
 | `HOSTINGER_VM_ID` | Numeric Hostinger virtual-machine identifier |
-| `POSTGRES_PASSWORD` | Initializes and authenticates PostgreSQL; use a strong URL-safe value |
+| `POSTGRES_PASSWORD` | Initializes and authenticates PostgreSQL; use a strong random value |
 | `LEDGERLENS_JWT_SECRET` | Signs access tokens; use at least 32 random characters |
 
 Optional Actions secret:

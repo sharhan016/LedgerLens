@@ -56,6 +56,10 @@ assert "traefik.docker.network" not in services["frontend"]["labels"]
 assert set(services["frontend"]["networks"]) == {"application"}
 assert set(compose["networks"]) == {"application"}
 assert not any(network.get("external") for network in compose["networks"].values())
+backend_environment = services["backend"]["environment"]
+assert backend_environment["LEDGERLENS_DATABASE_HOST"] == "db"
+assert backend_environment["LEDGERLENS_DATABASE_PASSWORD"] == "validation-password"
+assert "LEDGERLENS_DATABASE_URL" not in backend_environment
 assert any(
     volume["target"] == "/var/lib/postgresql/data"
     for volume in services["db"]["volumes"]

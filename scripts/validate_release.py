@@ -25,6 +25,7 @@ require(
     "traefik.http.routers.ledgerlens.rule=Host(`ledgerlens.sharhan.dev`)",
     "traefik.http.services.ledgerlens.loadbalancer.server.port=80",
     "LEDGERLENS_API_DOCS_ENABLED",
+    "LEDGERLENS_DATABASE_PASSWORD",
 )
 require(
     ".github/workflows/deploy-hostinger.yml",

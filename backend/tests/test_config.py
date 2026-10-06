@@ -40,3 +40,31 @@ def test_cors_origins_accept_comma_separated_deployment_value() -> None:
         "https://ledgerlens.sharhan.dev",
         "https://admin.example.test",
     )
+
+
+def test_database_components_preserve_reserved_password_characters() -> None:
+    settings = Settings(
+        database_url=None,
+        database_host="db",
+        database_port=5432,
+        database_name="ledgerlens",
+        database_user="ledgerlens",
+        database_password="strong@password:/#%",
+    )
+
+    url = settings.database_connection_url
+
+    assert url.host == "db"
+    assert url.port == 5432
+    assert url.database == "ledgerlens"
+    assert url.username == "ledgerlens"
+    assert url.password == "strong@password:/#%"
+
+
+def test_explicit_database_url_remains_supported() -> None:
+    settings = Settings(
+        database_url="postgresql+asyncpg://custom:password@database.example:5433/custom",
+    )
+
+    assert settings.database_connection_url.host == "database.example"
+    assert settings.database_connection_url.port == 5433

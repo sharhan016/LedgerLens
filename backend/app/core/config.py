@@ -3,6 +3,7 @@ from typing import Annotated
 
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
+from sqlalchemy.engine import URL, make_url
 
 
 class Settings(BaseSettings):
@@ -22,7 +23,12 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     )
-    database_url: str = "postgresql+asyncpg://ledgerlens:ledgerlens@db:5432/ledgerlens"
+    database_url: str | None = None
+    database_host: str = "db"
+    database_port: int = 5432
+    database_name: str = "ledgerlens"
+    database_user: str = "ledgerlens"
+    database_password: str = "ledgerlens"
     jwt_secret: str = "development-only-secret-change-before-production"
     jwt_issuer: str = "ledgerlens"
     jwt_audience: str = "ledgerlens-api"
@@ -59,6 +65,19 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             return tuple(origin.strip() for origin in value.split(",") if origin.strip())
         return value
+
+    @property
+    def database_connection_url(self) -> URL:
+        if self.database_url:
+            return make_url(self.database_url)
+        return URL.create(
+            "postgresql+asyncpg",
+            username=self.database_user,
+            password=self.database_password,
+            host=self.database_host,
+            port=self.database_port,
+            database=self.database_name,
+        )
 
     @model_validator(mode="after")
     def require_production_secret(self) -> "Settings":

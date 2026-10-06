@@ -11,7 +11,11 @@ from app.db.base import Base
 from app.models import AuditEvent, Chunk, Document, Tenant, User  # noqa: F401
 
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().database_url)
+database_url = get_settings().database_connection_url
+config.set_main_option(
+    "sqlalchemy.url",
+    database_url.render_as_string(hide_password=False).replace("%", "%%"),
+)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
