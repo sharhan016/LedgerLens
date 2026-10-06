@@ -47,10 +47,23 @@ function stubWorkspaceRequests() {
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  window.history.replaceState({}, "", "/");
   vi.unstubAllGlobals();
 });
 
 describe("LedgerLens workspace", () => {
+  it("loads the public AI architecture explainer directly", () => {
+    window.history.replaceState({}, "", "/architecture");
+
+    render(<AuthProvider><App /></AuthProvider>);
+
+    expect(screen.getByRole("heading", { name: /From source byte to cited answer/ })).toBeInTheDocument();
+    expect(screen.getByText(/UTF-8-safe 512 KiB processing boundary/)).toBeInTheDocument();
+    expect(screen.getByText(/RRF score/)).toBeInTheDocument();
+    expect(screen.getByText("Role-scoped cache")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Return to workspace/ })).toHaveAttribute("href", "/");
+  });
+
   it("loads an authenticated workspace and navigates to real knowledge data", async () => {
     localStorage.setItem("ledgerlens.demo-session", JSON.stringify(session));
     stubWorkspaceRequests();

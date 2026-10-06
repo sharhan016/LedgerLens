@@ -247,6 +247,193 @@ body::before {
   .taste-footer > span { justify-self: start; }
 }
 
+/* AI architecture field note */
+.architecture-page {
+  --architecture-dark: #0d2420;
+  --architecture-deep: #071713;
+  --architecture-paper: #f3eee2;
+  --architecture-light: #fbf8f0;
+  --architecture-orange: #d65338;
+  --architecture-mint: #8ad8b3;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--architecture-paper);
+}
+
+.architecture-page a { color: inherit; text-decoration: none; }
+.architecture-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 86px;
+  padding: 0 clamp(22px, 4vw, 72px);
+  border-bottom: 1px solid var(--line);
+  background: var(--architecture-light);
+}
+.architecture-wordmark { display: inline-flex; width: fit-content; align-items: center; gap: 13px; font-size: 1.15rem; font-weight: 600; }
+.architecture-mark { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid currentColor; border-radius: 3px; font: 500 .72rem var(--mono); letter-spacing: .04em; }
+.architecture-nav-label { display: inline-flex; align-items: center; gap: 9px; color: var(--muted); font: 500 .62rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.architecture-nav-label i { width: 7px; height: 7px; border-radius: 50%; background: var(--architecture-orange); }
+.architecture-return { justify-self: end; font: 500 .7rem var(--mono); }
+.architecture-return span { margin-left: 8px; color: var(--architecture-orange); }
+
+.architecture-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(340px, .6fr);
+  min-height: 690px;
+  border-bottom: 1px solid var(--line);
+}
+.architecture-hero-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(80px, 10vw, 150px) clamp(28px, 7vw, 128px); }
+.architecture-eyebrow { margin: 0 0 26px; color: var(--architecture-orange); font: 500 .65rem var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.architecture-hero h1 { max-width: 1060px; margin: 0; font-size: clamp(4rem, 8.2vw, 9rem); font-weight: 500; letter-spacing: -.065em; line-height: .82; text-wrap: balance; }
+.architecture-deck { max-width: 800px; margin: 50px 0 0; color: #4d5753; font-family: "Satoshi", sans-serif; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.65; }
+.architecture-system-card { display: grid; grid-template-rows: 1fr auto; padding: 64px clamp(30px, 4vw, 68px); border-left: 1px solid var(--line); background: #e4ded0; }
+.architecture-orbit { position: relative; align-self: center; width: min(100%, 390px); aspect-ratio: 1; border: 1px solid rgba(24,33,31,.25); border-radius: 50%; }
+.architecture-orbit::before, .architecture-orbit::after { position: absolute; inset: 15%; border: 1px solid rgba(24,33,31,.22); border-radius: 50%; content: ""; }
+.architecture-orbit::after { inset: 32%; background: var(--architecture-dark); }
+.architecture-orbit-core { position: absolute; z-index: 1; inset: 0; display: grid; place-items: center; color: var(--architecture-light); font: 500 1rem var(--mono); }
+.orbit-node { position: absolute; z-index: 2; width: 13px; height: 13px; border: 3px solid #e4ded0; border-radius: 50%; background: var(--architecture-orange); }
+.node-a { top: 4%; left: 62%; }.node-b { right: 4%; bottom: 25%; }.node-c { bottom: 14%; left: 9%; }
+.architecture-system-card dl { margin: 46px 0 0; border-top: 1px solid var(--line); }
+.architecture-system-card dl div { display: flex; justify-content: space-between; gap: 22px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.architecture-system-card dt { color: var(--muted); font: .6rem var(--mono); text-transform: uppercase; }
+.architecture-system-card dd { margin: 0; font: 500 .66rem var(--mono); text-align: right; }
+
+.architecture-section { padding: clamp(100px, 12vw, 180px) clamp(24px, 6vw, 110px); }
+.architecture-section-intro { display: grid; grid-template-columns: .45fr 1.1fr .7fr; gap: 5vw; align-items: start; margin-bottom: 80px; }
+.architecture-section-intro h2 { max-width: 900px; margin: 0; font-size: clamp(3rem, 6vw, 6.8rem); font-weight: 500; letter-spacing: -.06em; line-height: .9; text-wrap: balance; }
+.architecture-section-intro > p:last-child { max-width: 500px; margin: 12px 0 0; color: var(--muted); font-family: "Satoshi", sans-serif; line-height: 1.65; }
+.architecture-on-dark { color: var(--architecture-light); }
+.architecture-on-dark > p:last-child { color: rgba(243,238,226,.62); }
+
+.architecture-ingestion { background: var(--architecture-light); }
+.architecture-pipeline { display: grid; grid-template-columns: repeat(5, 1fr); margin: 0; padding: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); list-style: none; }
+.architecture-pipeline li { min-height: 310px; padding: 24px; border-right: 1px solid var(--line); }
+.architecture-pipeline li:last-child { border-right: 0; }
+.architecture-pipeline li > span { color: var(--architecture-orange); font: .65rem var(--mono); }
+.architecture-pipeline li div { margin-top: 110px; }
+.architecture-pipeline h3 { margin: 0 0 14px; font-size: 1.65rem; font-weight: 500; }
+.architecture-pipeline p, .architecture-parser-grid p, .architecture-safeguard-grid p { margin: 0; color: var(--muted); font-family: "Satoshi", sans-serif; font-size: .88rem; line-height: 1.55; }
+.architecture-boundary-note { display: grid; grid-template-columns: .7fr 1.3fr; gap: 60px; align-items: baseline; margin: 56px 0 100px 20%; padding: 28px 0; border-top: 1px solid var(--architecture-orange); border-bottom: 1px solid var(--architecture-orange); }
+.architecture-boundary-note strong { font-size: 1.3rem; font-weight: 500; }
+.architecture-boundary-note p { margin: 0; font-family: "Satoshi", sans-serif; line-height: 1.6; }
+.architecture-parser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--ink); }
+.architecture-parser-grid article { min-height: 270px; padding: 34px; background: var(--architecture-paper); }
+.architecture-parser-grid span { color: var(--architecture-orange); font: .65rem var(--mono); }
+.architecture-parser-grid h3 { margin: 70px 0 18px; font-size: 2.2rem; font-weight: 500; }
+
+.architecture-retrieval { color: var(--architecture-light); background: var(--architecture-dark); }
+.architecture-retrieval-map { display: grid; grid-template-columns: .85fr 1.4fr 1.1fr .8fr; gap: 26px; align-items: stretch; }
+.architecture-query-node, .architecture-fusion-node, .architecture-output-node, .architecture-search-lanes article { display: flex; flex-direction: column; justify-content: center; min-height: 140px; padding: 24px; border: 1px solid rgba(243,238,226,.22); }
+.architecture-search-lanes { display: grid; gap: 8px; }
+.architecture-search-lanes article { min-height: 110px; }
+.architecture-retrieval-map small, .architecture-retrieval-map span { margin-bottom: 14px; color: var(--architecture-mint); font: .58rem var(--mono); text-transform: uppercase; }
+.architecture-retrieval-map strong { font-size: 1.15rem; font-weight: 500; line-height: 1.25; }
+.architecture-fusion-node { color: var(--architecture-deep); border-color: var(--architecture-mint); background: var(--architecture-mint); }
+.architecture-fusion-node small { color: #315e4d; }
+.architecture-output-node { color: var(--architecture-deep); border-color: var(--architecture-light); background: var(--architecture-light); }
+.architecture-output-node small { color: var(--architecture-orange); }
+.architecture-stage-list { display: grid; grid-template-columns: repeat(5, 1fr); margin: 100px 0 0; padding: 0; border-top: 1px solid rgba(243,238,226,.35); list-style: none; }
+.architecture-stage-list li { padding: 22px 24px 0 0; }
+.architecture-stage-list span { color: var(--architecture-mint); font: .62rem var(--mono); }
+.architecture-stage-list h3 { margin: 55px 0 15px; font-size: 1.5rem; font-weight: 500; }
+.architecture-stage-list p { margin: 0; color: rgba(243,238,226,.6); font-family: "Satoshi", sans-serif; font-size: .86rem; line-height: 1.55; }
+.architecture-route-note { margin: 75px 0 0; padding: 22px 0; border-top: 1px solid rgba(243,238,226,.2); border-bottom: 1px solid rgba(243,238,226,.2); color: rgba(243,238,226,.62); font: .64rem/1.7 var(--mono); }
+.architecture-route-note strong { margin-right: 35px; color: var(--architecture-light); text-transform: uppercase; }
+
+.architecture-generation { background: var(--architecture-paper); }
+.architecture-answer-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 28px; align-items: center; }
+.architecture-answer-flow article { min-height: 300px; padding: 32px; border: 1px solid var(--ink); }
+.architecture-answer-flow article > span { color: var(--architecture-orange); font: .65rem var(--mono); }
+.architecture-answer-flow h3 { margin: 100px 0 15px; font-size: 2rem; font-weight: 500; }
+.architecture-answer-flow p { margin: 0; color: var(--muted); font-family: "Satoshi", sans-serif; line-height: 1.55; }
+.architecture-flow-arrow { color: var(--architecture-orange); font: 1.4rem var(--mono); }
+.architecture-confidence { display: grid; grid-template-columns: 1fr 1fr; gap: 9vw; margin-top: 110px; padding-top: 55px; border-top: 1px solid var(--ink); }
+.architecture-confidence > div { display: grid; grid-template-columns: .4fr 1fr; gap: 20px; align-items: baseline; }
+.architecture-confidence > div .architecture-eyebrow { grid-column: 1 / -1; }
+.architecture-confidence strong { font-size: 3rem; font-weight: 500; }
+.architecture-confidence span { color: var(--muted); font: .68rem var(--mono); text-transform: uppercase; }
+.architecture-confidence blockquote { margin: 0; font-size: clamp(2rem, 3.5vw, 4.2rem); letter-spacing: -.045em; line-height: 1.03; }
+
+.architecture-safeguards { color: var(--architecture-light); background: var(--architecture-deep); }
+.architecture-safeguard-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(243,238,226,.25); border-left: 1px solid rgba(243,238,226,.25); }
+.architecture-safeguard-grid article { min-height: 280px; padding: 32px; border-right: 1px solid rgba(243,238,226,.25); border-bottom: 1px solid rgba(243,238,226,.25); }
+.architecture-safeguard-grid small { color: var(--architecture-mint); font: .6rem var(--mono); text-transform: uppercase; }
+.architecture-safeguard-grid h3 { margin: 76px 0 18px; font-size: 1.8rem; font-weight: 500; }
+.architecture-safeguard-grid p { color: rgba(243,238,226,.58); }
+
+.architecture-modes { background: var(--architecture-light); }
+.architecture-mode-table { border-top: 1px solid var(--ink); }
+.architecture-table-row { display: grid; grid-template-columns: .55fr 1fr 1fr; border-bottom: 1px solid var(--line); }
+.architecture-table-row > * { padding: 24px; border-right: 1px solid var(--line); }
+.architecture-table-row > *:last-child { border-right: 0; }
+.architecture-table-row strong { font-size: 1.15rem; font-weight: 500; }
+.architecture-table-row span { font-family: "Satoshi", sans-serif; }
+.architecture-table-head { color: var(--muted); font: .62rem var(--mono); text-transform: uppercase; }
+
+.architecture-evaluation { display: grid; grid-template-columns: .85fr 1.15fr; gap: 9vw; background: #ded6c6; }
+.architecture-evaluation h2 { max-width: 700px; margin: 0; font-size: clamp(3rem, 5vw, 6rem); font-weight: 500; letter-spacing: -.055em; line-height: .92; }
+.architecture-metrics { border-top: 1px solid var(--ink); }
+.architecture-metrics article { display: grid; grid-template-columns: .8fr 1.2fr; gap: 30px; padding: 30px 0; border-bottom: 1px solid var(--line); }
+.architecture-metrics strong { font-size: 1.35rem; font-weight: 500; }
+.architecture-metrics p { margin: 0; color: var(--muted); font-family: "Satoshi", sans-serif; line-height: 1.55; }
+.architecture-footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 48px clamp(24px, 6vw, 110px); color: var(--architecture-light); background: var(--architecture-deep); }
+.architecture-footer p { color: rgba(243,238,226,.5); font: .58rem var(--mono); text-transform: uppercase; }
+.architecture-footer > a:last-child { justify-self: end; font: .68rem var(--mono); }
+.architecture-footer > a:last-child span { margin-left: 8px; color: var(--architecture-mint); }
+
+@media (max-width: 1050px) {
+  .architecture-hero { grid-template-columns: 1fr .55fr; }
+  .architecture-hero h1 { font-size: clamp(4rem, 9.5vw, 7rem); }
+  .architecture-section-intro { grid-template-columns: .35fr 1fr; }
+  .architecture-section-intro > p:last-child { grid-column: 2; }
+  .architecture-pipeline { grid-template-columns: repeat(3, 1fr); }
+  .architecture-pipeline li:nth-child(3) { border-right: 0; }
+  .architecture-pipeline li:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+  .architecture-retrieval-map { grid-template-columns: 1fr 1fr; }
+  .architecture-stage-list { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .architecture-safeguard-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .architecture-nav { grid-template-columns: 1fr auto; min-height: 74px; }
+  .architecture-nav-label { display: none; }
+  .architecture-return { font-size: .58rem; }
+  .architecture-hero { grid-template-columns: 1fr; }
+  .architecture-hero-copy { padding: 90px 24px 70px; }
+  .architecture-hero h1 { font-size: clamp(3.7rem, 18vw, 5.8rem); }
+  .architecture-hero h1 br { display: none; }
+  .architecture-deck { margin-top: 36px; }
+  .architecture-system-card { min-height: 600px; border-top: 1px solid var(--line); border-left: 0; }
+  .architecture-section { padding: 90px 22px; }
+  .architecture-section-intro { grid-template-columns: 1fr; gap: 22px; margin-bottom: 52px; }
+  .architecture-section-intro > p:last-child { grid-column: auto; }
+  .architecture-section-intro h2 { font-size: clamp(3rem, 14vw, 4.8rem); }
+  .architecture-pipeline, .architecture-parser-grid, .architecture-retrieval-map, .architecture-stage-list, .architecture-answer-flow, .architecture-confidence, .architecture-safeguard-grid, .architecture-evaluation { grid-template-columns: 1fr; }
+  .architecture-pipeline li, .architecture-pipeline li:nth-child(3) { min-height: 230px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .architecture-pipeline li div { margin-top: 70px; }
+  .architecture-boundary-note { grid-template-columns: 1fr; gap: 22px; margin: 50px 0 80px; }
+  .architecture-retrieval-map { gap: 10px; }
+  .architecture-stage-list { gap: 0; }
+  .architecture-stage-list li { padding-bottom: 38px; border-bottom: 1px solid rgba(243,238,226,.2); }
+  .architecture-stage-list h3 { margin-top: 30px; }
+  .architecture-answer-flow { gap: 12px; }
+  .architecture-flow-arrow { padding: 4px 0; transform: rotate(90deg); text-align: center; }
+  .architecture-confidence { gap: 70px; }
+  .architecture-safeguard-grid article { min-height: 250px; }
+  .architecture-table-row { grid-template-columns: .6fr 1fr 1fr; }
+  .architecture-table-row > * { padding: 16px 10px; font-size: .76rem; overflow-wrap: anywhere; }
+  .architecture-evaluation { gap: 70px; }
+  .architecture-metrics article { grid-template-columns: 1fr; gap: 14px; }
+  .architecture-footer { grid-template-columns: 1fr auto; }
+  .architecture-footer p { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .architecture-page *, .architecture-page *::before, .architecture-page *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
+
 .brand-login {
   --brand-ivory: #f8f4ec;
   --brand-paper: #fffdf8;

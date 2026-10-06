@@ -4,6 +4,7 @@ import { WorkspaceShell } from "./components/WorkspaceShell";
 import { canAccessWorkspaceView, type WorkspaceView } from "./config/workspaceAccess";
 import { useAuth } from "./hooks/useAuth";
 import { AssistantPage } from "./pages/AssistantPage";
+import { ArchitecturePage } from "./pages/ArchitecturePage";
 import { EvaluationPage } from "./pages/EvaluationPage";
 import { KnowledgePage } from "./pages/KnowledgePage";
 import { LoginPage } from "./pages/LoginPage3";
@@ -13,6 +14,9 @@ import "./styles.css";
 export default function App() {
   const { session } = useAuth();
   const [view, setView] = useState<WorkspaceView>("assistant");
+  const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+
+  if (pathname === "/architecture") return <ArchitecturePage />;
   if (!session) return <LoginPage />;
   const activeView = canAccessWorkspaceView(session.user.role, view) ? view : "assistant";
 
