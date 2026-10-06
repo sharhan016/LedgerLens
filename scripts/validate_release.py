@@ -28,6 +28,7 @@ require(
 )
 require(
     ".github/workflows/deploy-hostinger.yml",
+    "astral-sh/setup-uv@v10.2.0",
     "hostinger/deploy-on-vps@v2",
     "docker-compose.production.yml",
     "HOSTINGER_API_KEY",
