@@ -52,15 +52,19 @@ afterEach(() => {
 });
 
 describe("LedgerLens workspace", () => {
-  it("loads the public AI architecture explainer directly", () => {
+  it("loads the public interactive AI architecture walkthrough", () => {
     window.history.replaceState({}, "", "/architecture");
 
     render(<AuthProvider><App /></AuthProvider>);
 
-    expect(screen.getByRole("heading", { name: /From source byte to cited answer/ })).toBeInTheDocument();
-    expect(screen.getByText(/UTF-8-safe 512 KiB processing boundary/)).toBeInTheDocument();
-    expect(screen.getByText(/RRF score/)).toBeInTheDocument();
-    expect(screen.getByText("Role-scoped cache")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /How a question becomes a cited answer/ })).toBeInTheDocument();
+    expect(screen.getByText("UTF-8-safe 512 KiB")).toBeInTheDocument();
+    expect(screen.getByText("Σ 1/(60 + rank)")).toBeInTheDocument();
+    expect(screen.getByText(/Combines independently ranked dense and keyword results/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "11 Semantic cache" }));
+    expect(screen.getByRole("heading", { name: "Semantic cache" })).toBeInTheDocument();
+    expect(screen.getByText(/Scoped by tenant, role, provider, knowledge version/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Return to workspace/ })).toHaveAttribute("href", "/");
   });
 
