@@ -13,9 +13,17 @@ require(
     "pgvector/pgvector:pg16",
     "condition: service_healthy",
     'LEDGERLENS_DEMO_SEED_ENABLED: "true"',
+    "./data:/data:ro",
     "VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}",
 )
-require("backend/Dockerfile", "alembic.ini", "migrations", "scripts/start.sh", "INSTALL_ML")
+require(
+    "backend/Dockerfile",
+    "backend/alembic.ini",
+    "backend/migrations",
+    "COPY backend/scripts ./scripts",
+    "COPY data /data",
+    "INSTALL_ML",
+)
 require("backend/scripts/start.sh", "alembic upgrade head", "app.bootstrap.demo")
 require("frontend/Dockerfile", "npm run build", "nginx:1.27-alpine")
 require("frontend/nginx.conf", "proxy_pass http://backend:8000", "try_files")
@@ -26,6 +34,7 @@ require(
     "traefik.http.services.ledgerlens.loadbalancer.server.port=80",
     "LEDGERLENS_API_DOCS_ENABLED",
     "LEDGERLENS_DATABASE_PASSWORD",
+    "dockerfile: backend/Dockerfile",
 )
 require(
     ".github/workflows/deploy-hostinger.yml",

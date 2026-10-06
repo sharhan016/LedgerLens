@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
 WORKDIR /app
-COPY pyproject.toml ./
+COPY backend/pyproject.toml ./
 ARG INSTALL_ML=false
 RUN mkdir -p app && touch app/__init__.py && \
     if [ "$INSTALL_ML" = "true" ]; then \
@@ -9,10 +9,11 @@ RUN mkdir -p app && touch app/__init__.py && \
     else \
       pip install --no-cache-dir .; \
     fi && rm -rf app
-COPY app ./app
-COPY alembic.ini ./
-COPY migrations ./migrations
-COPY scripts ./scripts
+COPY backend/app ./app
+COPY backend/alembic.ini ./
+COPY backend/migrations ./migrations
+COPY backend/scripts ./scripts
+COPY data /data
 RUN chmod +x scripts/start.sh
 
 EXPOSE 8000

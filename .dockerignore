@@ -1,0 +1,15 @@
+.git
+.github
+.vertex
+.cache
+.pytest_cache
+.ruff_cache
+.venv
+**/__pycache__
+**/*.pyc
+backend/.pytest_cache
+backend/.ruff_cache
+backend/.venv
+docs
+evaluation
+frontend

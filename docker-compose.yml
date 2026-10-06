@@ -19,7 +19,8 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       args:
         INSTALL_ML: ${LEDGERLENS_INSTALL_ML:-false}
     env_file:

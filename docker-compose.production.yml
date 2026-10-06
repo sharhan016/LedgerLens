@@ -20,7 +20,8 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
       args:
         INSTALL_ML: ${LEDGERLENS_INSTALL_ML:-false}
     restart: unless-stopped
@@ -55,8 +56,6 @@ services:
       LEDGERLENS_DEMO_DATA_PATH: /data/sample/banking
       LEDGERLENS_SEMANTIC_CACHE_SIMILARITY_THRESHOLD: ${LEDGERLENS_SEMANTIC_CACHE_SIMILARITY_THRESHOLD:-0.92}
       LEDGERLENS_SEMANTIC_CACHE_TTL_MINUTES: ${LEDGERLENS_SEMANTIC_CACHE_TTL_MINUTES:-60}
-    volumes:
-      - ./data:/data:ro
     depends_on:
       db:
         condition: service_healthy

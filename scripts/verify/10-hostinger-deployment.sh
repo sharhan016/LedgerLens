@@ -37,6 +37,7 @@ LEDGERLENS_JWT_SECRET=validation-secret-with-at-least-thirty-two-characters \
 
 python3 - "${compose_output}" <<'PY'
 import json
+from pathlib import Path
 import sys
 
 with open(sys.argv[1], encoding="utf-8") as source:
@@ -60,6 +61,9 @@ backend_environment = services["backend"]["environment"]
 assert backend_environment["LEDGERLENS_DATABASE_HOST"] == "db"
 assert backend_environment["LEDGERLENS_DATABASE_PASSWORD"] == "validation-password"
 assert "LEDGERLENS_DATABASE_URL" not in backend_environment
+assert Path(services["backend"]["build"]["context"]) == Path.cwd()
+assert services["backend"]["build"]["dockerfile"] == "backend/Dockerfile"
+assert not any(volume["target"] == "/data" for volume in services["backend"].get("volumes", []))
 assert any(
     volume["target"] == "/var/lib/postgresql/data"
     for volume in services["db"]["volumes"]

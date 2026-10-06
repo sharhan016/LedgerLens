@@ -16,7 +16,7 @@ The implementation follows Hostinger's official
 | Service | Build or image | Internal port | Health | Public | Persistence |
 | --- | --- | ---: | --- | --- | --- |
 | `frontend` | Multi-stage React build, Nginx runtime | 80 | Nginx proxies `/health/ready` | Through Traefik only | None |
-| `backend` | `backend/Dockerfile` | 8000 | Database-backed `/health/ready` | No | None |
+| `backend` | `backend/Dockerfile` | 8000 | Database-backed `/health/ready` | No | Sample corpus baked into image |
 | `db` | `pgvector/pgvector:pg16` | 5432 | `pg_isready` | No | `ledgerlens_postgres` volume |
 
 All three services use LedgerLens's private Compose application network. Only `frontend`
