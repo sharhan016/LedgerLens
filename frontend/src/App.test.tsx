@@ -57,15 +57,18 @@ describe("LedgerLens workspace", () => {
 
     render(<AuthProvider><App /></AuthProvider>);
 
-    expect(screen.getByRole("heading", { name: /How a question becomes a cited answer/ })).toBeInTheDocument();
-    expect(screen.getByText("UTF-8-safe 512 KiB")).toBeInTheDocument();
-    expect(screen.getByText("Σ 1/(60 + rank)")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Question lifecycle" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Interactive LedgerLens question architecture" })).toBeInTheDocument();
+    expect(screen.getByText("512 KiB UTF-8 boundary")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "07 RRF fusion" }));
     expect(screen.getByText(/Combines independently ranked dense and keyword results/)).toBeInTheDocument();
+    expect(screen.getByText(/Reciprocal Rank Fusion · constant 60/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "11 Semantic cache" }));
-    expect(screen.getByRole("heading", { name: "Semantic cache" })).toBeInTheDocument();
-    expect(screen.getByText(/Scoped by tenant, role, provider, knowledge version/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Return to workspace/ })).toHaveAttribute("href", "/");
+    expect(screen.getByText("11 · Semantic cache")).toBeInTheDocument();
+    expect(screen.getByText(/Scoped by tenant, role, provider, knowledge version, evidence fingerprint/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Back to product/ })).toHaveAttribute("href", "/");
   });
 
   it("loads an authenticated workspace and navigates to real knowledge data", async () => {
