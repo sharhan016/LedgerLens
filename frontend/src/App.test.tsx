@@ -78,8 +78,8 @@ describe("LedgerLens workspace", () => {
     render(<AuthProvider><App /></AuthProvider>);
 
     expect(await screen.findByText("Knowledge Assistant")).toBeInTheDocument();
-    expect(screen.getByText("Mira Fernandes")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
+    expect(screen.getAllByText("Mira Fernandes")).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Sign out" })).toHaveLength(2);
     fireEvent.click(screen.getByRole("button", { name: /Knowledge base/ }));
     expect(await screen.findByText("Premium Savings Policy")).toBeInTheDocument();
     expect(screen.getByText("ready")).toBeInTheDocument();
@@ -91,9 +91,9 @@ describe("LedgerLens workspace", () => {
     stubWorkspaceRequests();
 
     render(<AuthProvider><App /></AuthProvider>);
-    expect(await screen.findByText("Dev Malhotra")).toBeInTheDocument();
+    expect(await screen.findAllByText("Dev Malhotra")).toHaveLength(2);
 
-    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Sign out" })[0]);
 
     expect(localStorage.getItem("ledgerlens.demo-session")).toBeNull();
     expect(await screen.findByRole("heading", { name: "Enter the policy workspace." })).toBeInTheDocument();

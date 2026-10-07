@@ -1175,6 +1175,7 @@ body::before {
 .workspace-context > span { color: var(--role-accent); }
 .workspace-context > strong { color: var(--workspace-paper); font-weight: 400; }
 .workspace-context > small { color: rgba(255, 253, 248, .38); font: inherit; }
+.mobile-account-bar { display: none; }
 
 .brand-workspace .page-heading { padding-top: 72px; border-bottom-color: var(--workspace-ink); }
 .brand-workspace .page-heading span, .brand-workspace .panel-title, .brand-workspace .section-label { color: var(--workspace-copper); }
@@ -1225,7 +1226,7 @@ body::before {
   .brand-workspace .operator-badge { width: 32px; height: 32px; }
   .brand-workspace .operator-copy strong { font-size: .68rem; }
   .brand-workspace .operator-copy small { display: none; }
-  .brand-workspace .rail-foot { position: fixed; z-index: 16; top: 78px; right: 0; left: 0; display: block; height: 58px; padding: 8px 16px; border-top: 0; border-bottom: 1px solid rgba(255, 253, 248, .16); background: var(--workspace-ink); }
+  .brand-workspace .rail-foot { display: none; }
   .brand-workspace .rail-status { display: none; }
   .brand-workspace .rail-identity { grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; justify-items: stretch; }
   .brand-workspace .rail-identity .operator-badge { display: grid; }
@@ -1236,8 +1237,15 @@ body::before {
   .brand-workspace .rail-identity .signout-label { position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: nowrap; }
   .tenant-chip strong { font-size: .7rem; }
   .tenant-chip small { display: none; }
-  .workspace-context { grid-template-columns: auto 1fr; min-height: 38px; margin-top: 58px; padding: 0 20px; }
+  .workspace-context { grid-template-columns: auto 1fr; min-height: 38px; margin-top: 0; padding: 0 20px; }
   .workspace-context > small { display: none; }
+  .mobile-account-bar { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 58px; padding: 8px 16px; color: var(--workspace-paper); border-bottom: 1px solid rgba(255, 253, 248, .16); background: var(--workspace-ink); }
+  .mobile-account-bar .operator-badge { width: 34px; height: 34px; }
+  .mobile-account-bar .operator-copy { min-width: 0; }
+  .mobile-account-bar .operator-copy strong, .mobile-account-bar .operator-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mobile-account-bar .operator-copy strong { color: var(--workspace-paper); font-size: .72rem; }
+  .mobile-account-bar .operator-copy small { margin-top: 3px; color: rgba(255, 253, 248, .48); font: .5rem var(--mono); text-transform: uppercase; }
+  .mobile-account-bar > button { display: flex; min-width: 88px; min-height: 42px; gap: 8px; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid rgba(255, 253, 248, .32); border-radius: 4px; color: var(--workspace-paper); background: transparent; font: 600 .62rem "Satoshi", sans-serif; }
   .brand-workspace .assistant-layout { min-height: calc(100vh - 116px); }
 }
 
@@ -1348,7 +1356,7 @@ body::before {
 }
 
 @media (max-width: 760px) {
-  .assistant-canvas { padding: 30px 20px 104px; }
+  .assistant-canvas { padding: 28px 16px calc(104px + env(safe-area-inset-bottom)); }
   .assistant-titlebar { display: grid; align-items: start; }
   .assistant-titlebar h1 { font-size: 3.1rem; }
   .assistant-actions { grid-row: 1; }
@@ -1356,6 +1364,8 @@ body::before {
   .composer-controls { grid-template-columns: 1fr auto; }
   .composer-controls > div { grid-column: 1 / -1; }
   .assistant-suggestions > div, .assistant-sources { grid-template-columns: 1fr; }
+  .assistant-suggestions { padding: 10px; }
+  .assistant-suggestions button { min-height: 76px; padding: 13px 14px; }
   .message { grid-template-columns: 34px minmax(0, 1fr); padding: 16px 13px; }
   .message-avatar { width: 32px; height: 32px; }
   .message-assistant > .brand-mark svg { width: 32px; height: 32px; }

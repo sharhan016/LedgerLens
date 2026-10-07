@@ -88,6 +88,14 @@ export function WorkspaceShell({
           <strong>{roleDetail.access}</strong>
           <small>Policy · Proof · Provenance</small>
         </div>
+        <div className="mobile-account-bar">
+          <span className="operator-badge">{roleDetail.initials}</span>
+          <span className="operator-copy"><strong>{session?.display_name}</strong><small>{roleDetail.label}</small></span>
+          <button aria-label="Sign out" onClick={logout} type="button">
+            <span>Sign out</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
         {children}
       </section>
     </main>
