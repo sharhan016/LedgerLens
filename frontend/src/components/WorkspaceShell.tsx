@@ -65,7 +65,10 @@ export function WorkspaceShell({
           <div className="rail-identity">
             <span className="operator-badge">{roleDetail.initials}</span>
             <span className="operator-copy"><strong>{session?.display_name}</strong><small>{roleDetail.label}</small></span>
-            <button aria-label="End session" onClick={logout} type="button">›</button>
+            <button aria-label="Sign out" onClick={logout} type="button">
+              <span className="signout-label">Sign out</span>
+              <span aria-hidden="true">↗</span>
+            </button>
           </div>
         </div>
       </aside>

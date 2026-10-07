@@ -1025,8 +1025,9 @@ body::before {
 .rail-identity .operator-badge { width: 38px; height: 38px; }
 .rail-identity .operator-copy strong { color: var(--workspace-paper); font-size: .7rem; }
 .rail-identity .operator-copy small { color: rgba(255, 253, 248, .42); font-size: .48rem; }
-.rail-identity > button { display: grid; width: 24px; height: 32px; place-items: center; border: 0; color: rgba(255, 253, 248, .7); background: transparent; font-size: 1.35rem; cursor: pointer; }
+.rail-identity > button { display: flex; width: 28px; height: 36px; align-items: center; justify-content: center; border: 0; color: rgba(255, 253, 248, .7); background: transparent; font-size: 1rem; cursor: pointer; }
 .rail-identity > button:hover { color: var(--workspace-paper); }
+.rail-identity .signout-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
 .brand-workspace .workspace-main { position: relative; }
 .brand-workspace .workspace-header {
@@ -1101,22 +1102,30 @@ body::before {
 }
 
 @media (max-width: 760px) {
-  .brand-workspace .rail { grid-template: 1fr / 46px 1fr 46px; height: 66px; padding: 7px 10px; }
-  .brand-workspace .rail-brand { justify-self: center; }
-  .brand-workspace .rail-brand .brand-mark svg { width: 31px; height: 31px; }
+  .brand-workspace .rail { grid-template: 1fr / 1fr; height: 72px; padding: 7px 10px calc(7px + env(safe-area-inset-bottom)); }
+  .brand-workspace .rail-brand { display: none; }
+  .brand-workspace .rail nav { grid-template-columns: repeat(auto-fit, minmax(62px, 1fr)); width: 100%; padding: 0; border: 0; }
+  .brand-workspace .nav-item { grid-template-columns: 1fr; gap: 3px; min-width: 0; min-height: 54px; padding: 5px 3px; justify-items: center; border-left: 0; border-bottom: 2px solid transparent; }
+  .brand-workspace .nav-item.active { border-bottom-color: var(--role-accent); }
+  .brand-workspace .nav-item > span { font-size: .48rem; }
+  .brand-workspace .nav-item strong { display: block; max-width: 100%; overflow: hidden; font-size: .64rem; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+  .brand-workspace .nav-item strong small { display: none; }
   .brand-workspace .workspace-header { min-height: 78px; }
   .brand-workspace .operator-badge { width: 32px; height: 32px; }
   .brand-workspace .operator-copy strong { font-size: .68rem; }
   .brand-workspace .operator-copy small { display: none; }
+  .brand-workspace .rail-foot { position: fixed; z-index: 16; top: 78px; right: 0; left: 0; display: block; height: 58px; padding: 8px 16px; border-top: 0; border-bottom: 1px solid rgba(255, 253, 248, .16); background: var(--workspace-ink); }
   .brand-workspace .rail-status { display: none; }
-  .brand-workspace .rail-identity { grid-template-columns: 1fr; gap: 0; justify-items: center; }
-  .brand-workspace .rail-identity .operator-badge, .brand-workspace .rail-identity .operator-copy { display: none; }
-  .brand-workspace .rail-identity > button { width: 38px; height: 48px; border: 1px solid rgba(255, 253, 248, .16); }
-  .brand-workspace .rail-identity > button::after { content: "Exit"; font: .46rem var(--mono); text-transform: uppercase; }
-  .brand-workspace .rail-identity > button { font-size: 0; }
+  .brand-workspace .rail-identity { grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; justify-items: stretch; }
+  .brand-workspace .rail-identity .operator-badge { display: grid; }
+  .brand-workspace .rail-identity .operator-copy { display: block; min-width: 0; }
+  .brand-workspace .rail-identity .operator-copy strong { overflow: hidden; font-size: .72rem; text-overflow: ellipsis; white-space: nowrap; }
+  .brand-workspace .rail-identity .operator-copy small { display: block; margin-top: 3px; font-size: .5rem; text-transform: uppercase; }
+  .brand-workspace .rail-identity > button { width: auto; min-width: 82px; height: 42px; gap: 8px; padding: 0 13px; border: 1px solid rgba(255, 253, 248, .3); border-radius: 4px; font: 600 .62rem "Satoshi", sans-serif; }
+  .brand-workspace .rail-identity .signout-label { position: static; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none; white-space: nowrap; }
   .tenant-chip strong { font-size: .7rem; }
   .tenant-chip small { display: none; }
-  .workspace-context { grid-template-columns: auto 1fr; min-height: 38px; padding: 0 20px; }
+  .workspace-context { grid-template-columns: auto 1fr; min-height: 38px; margin-top: 58px; padding: 0 20px; }
   .workspace-context > small { display: none; }
   .brand-workspace .assistant-layout { min-height: calc(100vh - 116px); }
 }

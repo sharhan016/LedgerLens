@@ -76,11 +76,24 @@ describe("LedgerLens workspace", () => {
 
     expect(await screen.findByText("Knowledge Assistant")).toBeInTheDocument();
     expect(screen.getByText("Mira Fernandes")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "End session" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Knowledge base/ }));
     expect(await screen.findByText("Premium Savings Policy")).toBeInTheDocument();
     expect(screen.getByText("ready")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("API online")).toBeInTheDocument());
+  });
+
+  it("signs out of a persisted mobile session", async () => {
+    localStorage.setItem("ledgerlens.demo-session", JSON.stringify(sessionFor("admin")));
+    stubWorkspaceRequests();
+
+    render(<AuthProvider><App /></AuthProvider>);
+    expect(await screen.findByText("Dev Malhotra")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
+
+    expect(localStorage.getItem("ledgerlens.demo-session")).toBeNull();
+    expect(await screen.findByRole("heading", { name: "Enter the policy workspace." })).toBeInTheDocument();
   });
 
   it.each([
